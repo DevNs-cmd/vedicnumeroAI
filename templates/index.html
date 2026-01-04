@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Numerology Calculator</title>
+    
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+</head>
+<body>
+
+<div class="container">
+    <div class="card glass">
+        <h1>🔮 Numerology</h1>
+        <p class="subtitle">
+            Discover your <span>Moolank</span> & <span>Destiny Number</span>
+        </p>
+
+        <form action="/calculate" method="post">
+            <label>Select Date of Birth</label>
+            <input type="date" name="dob" required>
+
+            <button type="submit">✨ Calculate Now</button>
+        </form>
+
+        <p class="footer-text">Powered by Python & Flask</p>
+    </div>
+</div>
+
+</body>
+</html>
