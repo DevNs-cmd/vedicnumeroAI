@@ -1,33 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title>Numerology Calculator</title>
-    
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+    <title>Vedic Numerology Calculator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
+
 <body>
-
-<div class="container">
-    <div class="card glass">
-        <h1>🔮 Numerology</h1>
-        <p class="subtitle">
-            Discover your <span>Moolank</span> & <span>Destiny Number</span>
-        </p>
-
-        <form action="/calculate" method="post">
-            <label>Select Date of Birth</label>
-            <input type="date" name="dob" required>
-
-            <button type="submit">✨ Calculate Now</button>
+    <div class="container mt-5">
+        <h1 class="text-center">Vedic Numerology Calculator</h1>
+        <form action="/calculate" method="post" class="mt-4">
+            <div class="mb-3">
+                <label for="dob" class="form-label">Date of Birth</label>
+                <input type="date" class="form-control" id="dob" name="dob" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Calculate</button>
         </form>
-
-        <p class="footer-text">Powered by Python & Flask</p>
+        <div class="mt-4">
+            <a href="/face_reading" class="btn btn-secondary">Go to Face Reading</a>
+        </div>
     </div>
-</div>
-
+    </div>
+    <script src="{{ url_for('static', filename='js/numerology-chat-integration.js') }}"></script>
 </body>
+
 </html>

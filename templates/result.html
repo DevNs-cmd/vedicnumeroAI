@@ -1,36 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title>Numerology Result</title>
-   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Numerology Result</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
+
 <body>
-
-<div class="container">
-    <div class="card glass">
-        <h1>✨ Your Result</h1>
-
-        <div class="result-box">
-            <p><strong>Date of Birth</strong></p>
-            <p>{{ dob }}</p>
+    <div class="container mt-5">
+        <h1 class="text-center">Your Numerology Result</h1>
+        <div class="card mt-4">
+            <div class="card-body">
+                <h5 class="card-title">Date of Birth: {{ dob }}</h5>
+                <p><strong>Moolank Number:</strong> {{ moolank }}</p>
+                <p><strong>Moolank Traits:</strong> {{ moolank_trait }}</p>
+                <p><strong>Destiny Number:</strong> {{ destiny }}</p>
+                <p><strong>Destiny Traits:</strong> {{ destiny_trait }}</p>
+            </div>
         </div>
-
-        <div class="result-box highlight">
-            <h3>Moolank: {{ moolank }}</h3>
-            <p>{{ moolank_trait }}</p>
+        <div class="mt-4">
+            <a href="/" class="btn btn-primary">Calculate Again</a>
+            <a href="/face_reading" class="btn btn-secondary">Go to Face Reading</a>
         </div>
-
-        <div class="result-box highlight">
-            <h3>Destiny Number: {{ destiny }}</h3>
-            <p>{{ destiny_trait }}</p>
-        </div>
-
-        <a href="/" class="link-btn">🔁 Calculate Again</a>
     </div>
-</div>
-
+    </div>
+    <script src="{{ url_for('static', filename='js/numerology-chat-integration.js') }}"></script>
 </body>
+
 </html>

@@ -1,6 +1,11 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
+import os
+from face_analysis import vedic_face_reader
 
 app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = 'uploads'
+if not os.path.exists(app.config['UPLOAD_FOLDER']):
+    os.makedirs(app.config['UPLOAD_FOLDER'])
 
 def reduce_number(num):
     while num > 9:
@@ -39,6 +44,29 @@ def calculate():
         moolank_trait=traits[moolank],
         destiny_trait=traits[destiny]
     )
+
+@app.route("/face_reading")
+def face_reading():
+    return render_template("face_reading.html")
+
+@app.route("/face_analyze", methods=["POST"])
+def face_analyze():
+    if 'image' not in request.files:
+        return render_template("face_reading.html", prediction="No file uploaded")
+    file = request.files['image']
+    if file.filename == '':
+        return render_template("face_reading.html", prediction="No file selected")
+    if file:
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+        file.save(filepath)
+        try:
+            prediction = vedic_face_reader(filepath)
+            if isinstance(prediction, dict):
+                return render_template("face_reading.html", prediction=prediction)
+            else:
+                return render_template("face_reading.html", prediction=prediction)
+        except Exception as e:
+            return render_template("face_reading.html", prediction=f"Error: {str(e)}")
 
 if __name__ == "__main__":
     app.run(debug=True)

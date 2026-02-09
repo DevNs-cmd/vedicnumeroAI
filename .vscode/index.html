@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Numerology Calculator</title>
+    
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+
+    
+</head>
+<body>
+
+
+
+
+    <!-- NAVBAR -->
+<header class="numerai-navbar" id="numeraiNavbar">
+    <div class="nav-container">
+  
+      <!-- Logo -->
+      <div class="nav-logo">
+        ✨ <span>NUMERAI</span>
+      </div>
+  
+      <!-- Nav Links -->
+      <nav class="nav-links" id="navMenu">
+        <a href="#" class="nav-item">Home</a>
+        <a href="#" class="nav-item">Moolank</a>
+        <a href="#" class="nav-item">Face Reading</a>
+        <a href="#" class="nav-item">Personal Reading</a>
+        <a href="#" class="nav-item">Pricing</a>
+      </nav>
+  
+      <!-- CTA + Toggle -->
+      <div class="nav-actions">
+        <a href="#" class="btn-start">Get Started</a>
+  
+        <!-- Mobile Toggle -->
+        <div class="nav-toggle" id="navToggle">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+  
+    </div>
+  </header>
+
+
+
+
+
+  <section class="moolank-section">
+    <!-- Tag -->
+    <span class="badge">✨ Moolank Calculator</span>
+  
+    <!-- Heading -->
+    <h1>
+      Discover Your <span>Root Number</span>
+    </h1>
+  
+    <!-- Description -->
+    <p class="desc">
+      Your Moolank (Root Number) reveals your core personality, natural talents,
+      and the energy you bring into this world.
+    </p>
+  
+    <!-- Card -->
+    <div class="calculator-card">
+      <h3>Enter Your Birth Date</h3>
+  
+      <div class="input-group">
+        <input type="date" />
+        <button>✨ Calculate</button>
+      </div>
+    </div>
+  </section>
+  
+<!-- <div class="container">
+    <div class="card glass">
+        <h1>🔮 Numerology</h1>
+        <p class="subtitle">
+            Discover your <span>Moolank</span> & <span>Destiny Number</span>
+        </p>
+
+        <form action="/calculate" method="post">
+            <label>Select Date of Birth</label>
+            <input type="date" name="dob" required>
+
+            <button type="submit">✨ Calculate Now</button>
+        </form>
+
+        <p class="footer-text">Powered by Python & Flask</p>
+    </div>
+</div> -->
+
+</body>
+</html>

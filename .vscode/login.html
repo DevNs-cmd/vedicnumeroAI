@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Login</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="login.css">
+<style>
+
+</style>
+</head>
+
+<body>
+
+<a href="index.html" class="back">← Back to Home</a>
+
+<div class="card">
+
+  <div class="icon">☀</div>
+  <h2>Welcome Back</h2>
+  <div class="subtitle">Enter your credentials to continue</div>
+
+  <input type="email" placeholder="Email Address">
+
+  <div class="input-group">
+    <input type="password" id="password" placeholder="Password">
+    <span class="eye" onclick="toggle()">👁</span>
+  </div>
+
+  <div class="links">
+    <!-- <label><input type="checkbox"> Remember me</label> -->
+    <a href="#">Forgot password?</a>
+  </div>
+
+  <button class="btn">Enter the Portal</button>
+
+  <div class="footer">
+    New to the cosmic realm?
+    <a href="signup.html">Create Account</a>
+  </div>
+
+</div>
+
+<script>
+function toggle(){
+  const p = document.getElementById("password");
+  p.type = p.type === "password" ? "text" : "password";
+}
+</script>
+
+</body>
+</html>

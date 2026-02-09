@@ -26,3 +26,22 @@ gsap.from(".hiw-step-card", {
   stagger: 0.2,
   ease: "power3.out",
 });
+
+
+
+
+
+gsap.registerPlugin(ScrollTrigger);
+
+// How It Works animation
+gsap.from(".hiw-card", {
+  scrollTrigger: {
+    trigger: ".hiw-section",
+    start: "top 70%",
+  },
+  opacity: 0,
+  y: 60,
+  duration: 1,
+  stagger: 0.2,
+  ease: "power3.out"
+});

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sign Up</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+
+ <link rel="stylesheet" href="signup.css">
+</head>
+
+<body>
+
+<a href="index2.html" class="back">← Back to Home</a>
+
+<div class="card">
+
+  <div class="icon"><img src="logo.png" alt="" height="70" width="70"></div>
+  <h2>Create Account</h2>
+  <div class="subtitle">Begin your cosmic journey</div>
+
+  <div class="progress">
+    <div class="dot active"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+  </div>
+
+  <!-- STEP 1 -->
+  <div class="step active">
+    <input type="text" placeholder="Full Name">
+    <input type="email" placeholder="Email Address">
+    <button class="btn" onclick="nextStep()">Next</button>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="step">
+    <div class="input-group">
+      <input type="password" id="pass1" placeholder="Create Password">
+      <span class="eye" onclick="toggle('pass1')">👁</span>
+    </div>
+
+    <div class="input-group">
+      <input type="password" id="pass2" placeholder="Confirm Password">
+      <span class="eye" onclick="toggle('pass2')">👁</span>
+    </div>
+
+    <button class="btn secondary" onclick="prevStep()">Back</button>
+    <button class="btn" onclick="nextStep()">Next</button>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="step">
+    <input type="date">
+    <input type="text" placeholder="Birth Place">
+    <button class="btn secondary" onclick="prevStep()">Back</button>
+   <a href="index2.html"><button  class="btn" >Enter the Portal</button></a> 
+  </div>
+
+  <div class="footer">
+    Already have an account? <a href="login.html">Login</a>
+  </div>
+
+</div>
+
+<script>
+let current = 0;
+const steps = document.querySelectorAll('.step');
+const dots = document.querySelectorAll('.dot');
+
+function update(){
+  steps.forEach((s,i)=>s.classList.toggle('active',i===current));
+  dots.forEach((d,i)=>d.classList.toggle('active',i<=current));
+}
+
+function nextStep(){
+  if(current < steps.length-1){ current++; update(); }
+}
+
+function prevStep(){
+  if(current > 0){ current--; update(); }
+}
+
+function toggle(id){
+  const input = document.getElementById(id);
+  input.type = input.type === "password" ? "text" : "password";
+}
+</script>
+
+</body>
+</html>
