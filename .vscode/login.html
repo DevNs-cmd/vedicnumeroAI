@@ -22,7 +22,7 @@
   <h2>Welcome Back</h2>
   <div class="subtitle">Enter your credentials to continue</div>
 
-  <input type="email" placeholder="Email Address">
+  <input type="email" id="loginEmail" placeholder="Email Address">
 
   <div class="input-group">
     <input type="password" id="password" placeholder="Password">
@@ -34,7 +34,7 @@
     <a href="#">Forgot password?</a>
   </div>
 
-  <button class="btn">Enter the Portal</button>
+  <button class="btn" id="loginBtn">Enter the Portal</button>
 
   <div class="footer">
     New to the cosmic realm?
@@ -48,6 +48,36 @@ function toggle(){
   const p = document.getElementById("password");
   p.type = p.type === "password" ? "text" : "password";
 }
+
+const loginBtn = document.getElementById("loginBtn");
+loginBtn.addEventListener("click", async () => {
+  const email = document.getElementById("loginEmail").value.trim();
+  const password = document.getElementById("password").value;
+
+  if (!email || !password) {
+    alert("Please enter email and password");
+    return;
+  }
+
+  try {
+    const res = await fetch("http://127.0.0.1:8000/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password })
+    });
+
+    const data = await res.json();
+    if (!res.ok || !data.success) {
+      alert(data.detail || "Login failed");
+      return;
+    }
+
+    localStorage.setItem("vedic_token", data.token);
+    window.location.href = "index2.html";
+  } catch (err) {
+    alert("Server not reachable");
+  }
+});
 </script>
 
 </body>

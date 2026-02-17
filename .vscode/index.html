@@ -79,8 +79,8 @@
       <h3>Enter Your Birth Date</h3>
   
       <div class="input-group">
-        <input type="date" />
-        <button>✨ Calculate</button>
+        <input type="date" id="dobInput" />
+        <button id="calcBtn">✨ Calculate</button>
       </div>
     </div>
   </section>
@@ -103,5 +103,49 @@
     </div>
 </div> -->
 
+<script>
+const calcBtn = document.getElementById("calcBtn");
+if (calcBtn) {
+  calcBtn.addEventListener("click", async (e) => {
+    e.preventDefault();
+    const token = localStorage.getItem("vedic_token");
+    if (!token) {
+      alert("Please login to continue");
+      window.location.href = "login.html";
+      return;
+    }
+
+    const dob = document.getElementById("dobInput").value;
+    if (!dob) {
+      alert("Please select your date of birth");
+      return;
+    }
+
+    try {
+      const res = await fetch("http://127.0.0.1:8000/api/numerology", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ dob })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        alert(data.detail || "Numerology calculation failed");
+        if (res.status === 401) {
+          localStorage.removeItem("vedic_token");
+          window.location.href = "login.html";
+        }
+        return;
+      }
+
+      alert(`Moolank: ${data.moolank}\\nBhagyank: ${data.bhagyank}\\nPrediction: ${data.prediction}`);
+    } catch (err) {
+      alert("Server not reachable");
+    }
+  });
+}
+</script>
 </body>
 </html>

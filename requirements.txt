@@ -1,4 +1,12 @@
-Flask==2.3.3
-opencv-python==4.8.1.78
-numpy==1.24.3
-Pillow==10.0.1
+fastapi
+uvicorn
+pymongo
+python-jose
+passlib[bcrypt]
+python-multipart
+opencv-python
+pillow
+numpy
+email-validator
+mongomock
+mongita

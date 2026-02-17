@@ -28,8 +28,8 @@
 
   <!-- STEP 1 -->
   <div class="step active">
-    <input type="text" placeholder="Full Name">
-    <input type="email" placeholder="Email Address">
+    <input type="text" id="signupName" placeholder="Full Name">
+    <input type="email" id="signupEmail" placeholder="Email Address">
     <button class="btn" onclick="nextStep()">Next</button>
   </div>
 
@@ -51,10 +51,10 @@
 
   <!-- STEP 3 -->
   <div class="step">
-    <input type="date">
-    <input type="text" placeholder="Birth Place">
+    <input type="date" id="signupDob">
+    <input type="text" id="signupBirthPlace" placeholder="Birth Place">
     <button class="btn secondary" onclick="prevStep()">Back</button>
-   <a href="index2.html"><button  class="btn" >Enter the Portal</button></a> 
+   <a href="index2.html" id="signupLink"><button class="btn" id="signupBtn" type="button">Enter the Portal</button></a> 
   </div>
 
   <div class="footer">
@@ -85,6 +85,46 @@ function toggle(id){
   const input = document.getElementById(id);
   input.type = input.type === "password" ? "text" : "password";
 }
+
+const signupLink = document.getElementById("signupLink");
+signupLink.addEventListener("click", async (e) => {
+  e.preventDefault();
+  const full_name = document.getElementById("signupName").value.trim();
+  const email = document.getElementById("signupEmail").value.trim();
+  const password = document.getElementById("pass1").value;
+  const confirm = document.getElementById("pass2").value;
+  const dob = document.getElementById("signupDob").value;
+  const birth_place = document.getElementById("signupBirthPlace").value.trim();
+
+  if (!email || !password) {
+    alert("Please complete signup details");
+    return;
+  }
+
+  if (password !== confirm) {
+    alert("Passwords do not match");
+    return;
+  }
+
+  try {
+    const res = await fetch("http://127.0.0.1:8000/auth/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ full_name, email, password, dob, birth_place })
+    });
+
+    const data = await res.json();
+    if (!res.ok || !data.success) {
+      alert(data.detail || "Signup failed");
+      return;
+    }
+
+    localStorage.setItem("vedic_token", data.token);
+    window.location.href = "index2.html";
+  } catch (err) {
+    alert("Server not reachable");
+  }
+});
 </script>
 
 </body>
