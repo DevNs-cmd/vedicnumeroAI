@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>NumerAI – Cosmic Blueprint | Best AI Vedic Numerology 2026</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta name="description"
+    content="NumerAI uses advanced AI to unlock Vedic Numerology secrets. Calculate Moolank, Destiny Numbers, and get Face Reading insights. Your ultimate cosmic blueprint for success.">
+  <meta name="keywords"
+    content="numerology, vedic numerology, AI numerology, cosmic blueprint, moolank calculator, destiny number, face reading AI, lucky numbers, numerology predictions, spiritual AI, vedic astrology, life path number, name numerology, bhagyank calculator, lo shu grid online, chaldean numerology, pythagorean numerology, indian astrology AI, personalized numerology report, career numerology, marriage compatibility, wealth numerology, success numbers, daily numerology, numerai, prem aggarwal numerology, dev nath suman, mahesh sharma numerology, ancient wisdom AI, destiny analysis, soul urge number, personality number, karmic debt numbers, mobile numerology, business name numerology, baby name numerology, astrology privacy, secure numerology, future predictions 2026, spiritual growth, numerology software, numerology for entrepreneurs, psychic numbers, occult science AI, mystical numbers, zodiac compatibility, birth date numerology, time of birth astrology">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500&display=swap"
+    rel="stylesheet">
+
+  <link rel="stylesheet" href="style2.css">
+  <link rel="stylesheet" href="chatbot.css">
+
+  <style>
+    /* --- GSAP ANIMATION STATES --- */
+    .hero-text h1,
+    .hero-text p,
+    .hero-buttons,
+    .numerai-badge {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+
+    .hero-3d-card {
+      opacity: 0;
+      transform: scale(0.7) rotate(10deg);
+    }
+
+    @keyframes floating {
+      0% {
+        transform: translateY(0px);
+      }
+
+      50% {
+        transform: translateY(-15px);
+      }
+
+      100% {
+        transform: translateY(0px);
+      }
+    }
+
+    .floating-img {
+      animation: floating 5s ease-in-out infinite;
+    }
+
+    /* --- LOCK & POPUP STYLES --- */
+    .popup-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.92);
+      backdrop-filter: blur(15px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.5s ease;
+    }
+
+    .popup-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .popup-card {
+      background: radial-gradient(circle at top, #1a1a3a, #050510);
+      border: 1px solid rgba(255, 191, 63, 0.4);
+      padding: 50px 30px;
+      border-radius: 30px;
+      max-width: 450px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 0 60px rgba(255, 191, 63, 0.2);
+    }
+
+    .btn-popup-signin {
+      display: block;
+      background: linear-gradient(135deg, #ffbf3f, #ff9f00);
+      color: #000 !important;
+      padding: 15px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 800;
+      margin-top: 25px;
+      transition: 0.3s;
+    }
+
+    .nav-item i {
+      font-size: 10px;
+      color: #ffbf3f;
+      margin-left: 5px;
+    }
+
+    /* Reveal animations for scroll */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s ease-out;
+    }
+
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="numerai-navbar" id="numeraiNavbar">
+    <div class="nav-container">
+      <div class="nav-logo">✨ <span>NUMERAI</span></div>
+      <nav class="nav-links" id="navMenu">
+        <a href="index.html" class="nav-item">Home</a>
+        <a href="moolank.html" class="nav-item restricted">Moolank <i class="fas fa-lock"></i></a>
+        <a href="face_reading.html" class="nav-item restricted">Face Reading <i class="fas fa-lock"></i></a>
+        <a href="Personal-Reading.html" class="nav-item restricted">Personal Reading <i class="fas fa-lock"></i></a>
+        <a href="Pricing.html" class="nav-item restricted">Pricing <i class="fas fa-lock"></i></a>
+      </nav>
+      <div class="nav-actions">
+        <a href="signup.html" class="btn-start">Get Started</a>
+        <div class="nav-toggle" id="navToggle"><span></span><span></span><span></span></div>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero-section">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-6 hero-text">
+          <span class="badge numerai-badge mb-3">⭐ AI-Powered Numerology</span>
+          <h1>Discover Your <br><span class="gradient-text">Cosmic Blueprint</span></h1>
+          <p>Unlock the ancient wisdom of numbers with cutting-edge AI technology. Understand your path and embrace your
+            true potential.</p>
+          <div class="hero-buttons">
+            <a href="#" class="btn btn-glow restricted">✨ Calculate Your Numbers →</a>
+          </div>
+        </div>
+        <div class="col-lg-6 text-center">
+          <div class="hero-3d-card">
+            <img src="AI face.png" alt="AI Numerology Face" class="floating-img img-fluid">
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <section class="features-section reveal">
+    <div class="features-overlay"></div>
+    <div class="container text-center">
+      <p class="features-tag">POWERFUL FEATURES</p>
+      <h2 class="features-title">Unlock the <span>Secrets</span> Within</h2>
+      <p class="features-desc">Our AI-powered platform combines ancient numerological wisdom with technology.</p>
+    </div>
+  </section>
+
+  <section class="features-grid-section">
+    <div class="container">
+      <div class="features-grid">
+        <div class="feature-card reveal restricted">
+          <div class="icon">🔢</div>
+          <h3>Moolank Calculator</h3>
+          <p>Discover your root number derived from your birth date. Understand the vibrations that influence your life
+            path.</p>
+        </div>
+        <div class="feature-card reveal restricted">
+          <div class="icon">✨</div>
+          <h3>Destiny Number</h3>
+          <p>Unveil your life purpose encoded in your name. Align with your highest potential and true calling.</p>
+        </div>
+        <div class="feature-card reveal restricted">
+          <div class="icon">🧠</div>
+          <h3>Face Reading AI</h3>
+          <p>Advanced AI analyzes facial features to reveal hidden traits and emotional patterns within you.</p>
+        </div>
+        <div class="feature-card reveal restricted">
+          <div class="icon">💛</div>
+          <h3>Know Your Inner Self</h3>
+          <p>Deep psychological insights combining ancient wisdom with modern AI. Understand your drives.</p>
+        </div>
+        <div class="feature-card reveal restricted">
+          <div class="icon">🍀</div>
+          <h3>Lucky Numbers</h3>
+          <p>Calculate your personal lucky numbers for important decisions and optimize your timing.</p>
+        </div>
+        <div class="feature-card reveal restricted">
+          <div class="icon">🔮</div>
+          <h3>AI Predictions</h3>
+          <p>Machine learning algorithms analyze your numerology profile to provide future insights.</p>
+        </div>
+      </div>
+      <div class="features-btn-wrap reveal">
+        <button class="features-btn restricted">Explore All Features</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="cosmic-cta reveal">
+    <div class="cta-box">
+      <div class="cta-icon">✨</div>
+      <h2>Begin Your <span>Cosmic Journey</span></h2>
+      <p>Join thousands of seekers who have unlocked the ancient wisdom of numbers. Your personalized numerology reading
+        awaits.</p>
+      <a href="#" class="cta-btn restricted">Get Your Personal Readings →</a>
+      <div class="cta-trust">
+        <span class="secure">● 100% Secure & Private</span>
+        <span class="card-1">● No Credit Card Required</span>
+        <span class="instant">● Instant Results</span>
+      </div>
+    </div>
+  </section>
+
+  <footer class="numerai-footer-alt">
+    <div class="footer-glass">
+      <div class="footer-brand-box">
+        <h2>✨ NumerAI</h2>
+        <p>Unlocking cosmic intelligence through AI & numerology.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Explore</h4>
+        <a href="index.html">Home</a>
+        <a href="#" class="restricted">Plans</a>
+        <a href="About us.html">About</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div class="footer-links">
+        <h4>Support</h4>
+        <a href="Privacy-Policy.html">Privacy Policy</a>
+        <a href="Terms-Conditions.html">Terms & Conditions</a>
+      </div>
+      <div class="footer-social-alt">
+        <h4>Connect</h4>
+        <div class="social-icons">
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-linkedin-in"></i></a>
+          <a href="#"><i class="fab fa-whatsapp"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 NumerAI • Crafted with ✨ Cosmic Energy</div>
+  </footer>
+
+  <div id="scrollPopup" class="popup-overlay">
+    <div class="popup-card">
+      <button class="close-popup" onclick="closePopup()">&times;</button>
+      <span style="font-size: 50px; display: block; margin-bottom: 10px;">🔒</span>
+      <h3>Sign In Required</h3>
+      <p>To access this cosmic feature and see your personalized AI results, please sign in or create an account.</p>
+      <a href="signup.html" class="btn-popup-signin">Sign Up / Sign In Now</a>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+  <script>
+    // CHECK LOGIN STATE
+    const isLoggedIn = !!localStorage.getItem('vedic_token');
+
+    // 1. GSAP HERO ANIMATIONS
+    window.addEventListener('load', () => {
+      const tl = gsap.timeline();
+      tl.to(".numerai-badge", { opacity: 1, y: 0, duration: 0.6 })
+        .to(".hero-text h1", { opacity: 1, y: 0, duration: 0.6 }, "-=0.3")
+        .to(".hero-text p", { opacity: 1, y: 0, duration: 0.6 }, "-=0.3")
+        .to(".hero-buttons", { opacity: 1, y: 0, duration: 0.6 }, "-=0.3")
+        .to(".hero-3d-card", { opacity: 1, scale: 1, rotate: 0, duration: 0.8 }, "-=0.5");
+    });
+
+    // 2. SCROLL REVEAL (INTERSECTION OBSERVER)
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('active');
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // 3. 5-SEC SCROLL POPUP (guests only)
+    let hasScrolled = false;
+    if (!isLoggedIn) {
+      window.addEventListener('scroll', () => {
+        if (!hasScrolled) {
+          hasScrolled = true;
+          setTimeout(() => showPopup(), 5000);
+        }
+      });
+    }
+
+    // 4. NAVIGATION GUARD — logged-in users go to page, guests see popup
+    const restrictedPages = {
+      'Moolank': 'moolank.html',
+      'Face Reading': 'face_reading.html',
+      'Personal Reading': 'Personal-Reading.html',
+      'Pricing': 'Pricing.html',
+    };
+    document.querySelectorAll('.restricted').forEach(item => {
+      item.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (isLoggedIn) {
+          const text = item.textContent.trim();
+          for (const [key, page] of Object.entries(restrictedPages)) {
+            if (text.includes(key)) { window.location.href = page; return; }
+          }
+          window.location.href = 'Pricing.html';
+        } else {
+          showPopup();
+        }
+      });
+    });
+
+    function showPopup() { document.getElementById('scrollPopup').classList.add('active'); }
+    function closePopup() { document.getElementById('scrollPopup').classList.remove('active'); }
+
+    // Close on bg click
+    window.onclick = (e) => { if (e.target == document.getElementById('scrollPopup')) closePopup(); };
+
+    // 5. MOBILE NAVBAR TOGGLE
+    const navToggle = document.getElementById('navToggle');
+    const navMenu = document.getElementById('navMenu');
+    if (navToggle && navMenu) {
+      navToggle.addEventListener('click', () => navMenu.classList.toggle('active'));
+    }
+
+    // 6. NAVBAR SCROLL EFFECT
+    window.addEventListener('scroll', () => {
+      const navbar = document.getElementById('numeraiNavbar');
+      if (navbar) navbar.classList.toggle('scrolled', window.scrollY > 50);
+    });
+  </script>
+
+  <script src="chatbot.js"></script>
+</body>
+
+</html>

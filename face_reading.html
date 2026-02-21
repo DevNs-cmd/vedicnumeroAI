@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Face Reading | NumerAI – Decode Your Facial Destiny</title>
+  <meta name="description"
+    content="Upload your photo and let NumerAI's AI decode your facial features to reveal numerology insights, personality traits, and cosmic destiny.">
+  <link rel="stylesheet" href="face_reading.css">
+  <link rel="stylesheet" href="chatbot.css">
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500&display=swap"
+    rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- API Config -->
+  <script src="api-config.js"></script>
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <header class="numerai-navbar" id="numeraiNavbar">
+    <div class="nav-container">
+      <!-- Logo -->
+      <div class="nav-logo">
+        ✨ <span>NUMERAI</span>
+      </div>
+      <!-- Nav Links -->
+      <nav class="nav-links" id="navMenu">
+        <a href="index.html" class="nav-item">Home</a>
+        <a href="moolank.html" class="nav-item">Moolank</a>
+        <a href="face_reading.html" class="nav-item">Face Reading</a>
+        <a href="Personal-Reading.html" class="nav-item">Personal Reading</a>
+        <a href="Pricing.html" class="nav-item">Pricing</a>
+      </nav>
+      <!-- CTA + Toggle -->
+      <div class="nav-actions">
+        <a href="signup.html" class="btn-start">Get Started</a>
+        <!-- Mobile Toggle -->
+        <div class="nav-toggle" id="navToggle">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+  <!-- FACE READING SECTION -->
+  <section class="face-section">
+    <div class="container">
+
+      <!-- Heading -->
+      <div class="text-center mb-5 fade-up">
+        <span class="badge-ai">✨ AI Face Reading</span>
+        <h1 class="title">
+          Decode Your <span>Facial Destiny</span>
+        </h1>
+        <p class="subtitle">
+          Ancient physiognomy meets cutting-edge AI. Discover what your face reveals
+          about your personality, fortune, and life path.
+        </p>
+      </div>
+
+      <div class="row align-items-center g-5">
+
+        <!-- LEFT IMAGE -->
+        <div class="col-lg-6 text-center fade-left">
+          <div class="face-wrapper">
+            <img src="AI face.png" alt="AI Face Analysis" class="face-img">
+          </div>
+        </div>
+
+        <!-- RIGHT CONTENT -->
+        <div class="col-lg-6 fade-right">
+
+          <!-- Upload Card -->
+          <div class="upload-card">
+            <h4>Start Your Face Reading</h4>
+            <p class="small-text">
+              Upload a clear, front-facing photo to receive your personalized
+              facial analysis and numerology insights.
+            </p>
+
+            <div class="upload-box">
+              <div class="upload-icon">⬆</div>
+              <p>Drop your photo here<br>or click to browse</p>
+
+              <label class="upload-btn">
+                Choose Photo
+                <input type="file" id="imageInput" accept="image/*" hidden>
+              </label>
+            </div>
+
+            <div id="result" style="margin-top:20px;"></div>
+
+            <small class="privacy-text">
+              Your photos are processed securely and never stored.
+            </small>
+          </div>
+
+          <!-- Features -->
+          <div class="feature-list mt-4">
+            <div class="feature-item">
+              ⭐ <strong>Facial Mapping</strong>
+              <span>Advanced AI analyzes 68 facial landmarks</span>
+            </div>
+            <div class="feature-item">
+              🧠 <strong>Personality Analysis</strong>
+              <span>Reveal hidden traits from your features</span>
+            </div>
+            <div class="feature-item">
+              🔢 <strong>Numerology Integration</strong>
+              <span>Connect facial patterns with numbers</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- How it works -->
+  <section class="how-it-works">
+    <h2 class="section-title">How It Works</h2>
+
+    <div class="steps-wrapper">
+      <!-- Step 1 -->
+      <div class="step-card">
+        <span class="step-number">01</span>
+        <h4>Upload Photo</h4>
+        <p>Take or upload a clear front-facing photo</p>
+      </div>
+
+      <span class="step-arrow">➜</span>
+
+      <!-- Step 2 -->
+      <div class="step-card">
+        <span class="step-number">02</span>
+        <h4>AI Analysis</h4>
+        <p>Our AI maps 68 facial landmarks</p>
+      </div>
+
+      <span class="step-arrow">➜</span>
+
+      <!-- Step 3 -->
+      <div class="step-card">
+        <span class="step-number">03</span>
+        <h4>Get Insights</h4>
+        <p>Receive your personalized reading</p>
+      </div>
+    </div>
+  </section>
+
+
+
+  <footer class="numerai-footer-alt">
+    <div class="footer-glass">
+
+      <!-- Brand -->
+      <div class="footer-brand-box">
+        <h2>✨ NumerAI</h2>
+        <p>Unlocking cosmic intelligence through AI &amp; numerology.</p>
+      </div>
+
+      <!-- Links -->
+      <div class="footer-links">
+        <h4>Explore</h4>
+        <a href="index.html">Home</a>
+        <a href="Pricing.html">Plans</a>
+        <a href="About us.html">About</a>
+        <a href="contact.html">Contact</a>
+      </div>
+
+      <!-- Support -->
+      <div class="footer-links">
+        <h4>Support</h4>
+        <a href="Privacy-Policy.html">Privacy Policy</a>
+        <a href="Terms-Conditions.html">Terms &amp; Conditions</a>
+      </div>
+
+      <!-- Social -->
+      <div class="footer-social-alt">
+        <h4>Connect</h4>
+        <div class="social-icons">
+          <a class="instagram" href="#"><i class="fab fa-instagram"></i></a>
+          <a class="linkedin" href="#"><i class="fab fa-linkedin-in"></i></a>
+          <a class="whatsapp" href="#"><i class="fab fa-whatsapp"></i></a>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      © 2026 NumerAI • Crafted with ✨ Cosmic Energy
+    </div>
+  </footer>
+
+
+  <script>
+    // AUTH GUARD – redirect to login if not logged in
+    const token = localStorage.getItem("vedic_token");
+    if (!token) {
+      alert("Please login to continue");
+      window.location.href = "login.html";
+    }
+
+    // FACE IMAGE UPLOAD & ANALYSIS
+    const imageInput = document.getElementById("imageInput");
+    if (imageInput) {
+      imageInput.addEventListener("change", async function () {
+        const file = this.files[0];
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append("file", file);
+
+        document.getElementById("result").innerHTML = `<p style="color:#ffcc33">⏳ Analyzing your face...</p>`;
+
+        try {
+          const response = await fetch(`${window.API_BASE_URL}/api/face-read`, {
+            method: "POST",
+            headers: { "Authorization": `Bearer ${token}` },
+            body: formData
+          });
+
+          const data = await response.json();
+
+          if (!response.ok) {
+            const message = data.detail || "Face reading failed";
+            document.getElementById("result").innerHTML =
+              `<p style="color:#ff6b6b">⚠️ ${message}</p>`;
+            if (response.status === 401) {
+              localStorage.removeItem("vedic_token");
+              window.location.href = "login.html";
+            }
+            return;
+          }
+
+          // Format output cleanly (confidence may be null)
+          const confidence = data.confidence !== null ? `${data.confidence}%` : 'High';
+          document.getElementById("result").innerHTML = `
+                        <div style="background:rgba(255,204,51,0.1); border:1px solid rgba(255,204,51,0.3); border-radius:12px; padding:20px; margin-top:16px;">
+                            <h3 style="color:#ffcc33; font-family:'Playfair Display',serif; margin-bottom:12px;">✨ Face Reading Result</h3>
+                            <p><b>Face Shape:</b> ${data.face_shape || 'N/A'}</p>
+                            <p><b>Confidence:</b> ${confidence}</p>
+                            <p><b>Numerology Insight:</b> ${data.numerology_prediction || 'N/A'}</p>
+                        </div>
+                    `;
+
+        } catch (err) {
+          document.getElementById("result").innerHTML =
+            `<p style="color:#ff6b6b">⚠️ Server not reachable. Please ensure the backend is running.</p>`;
+        }
+      });
+    }
+
+    // SCROLL REVEAL
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("show");
+        }
+      });
+    });
+    document.querySelectorAll(".fade-up,.fade-left,.fade-right").forEach(el => observer.observe(el));
+
+    // MOBILE NAVBAR TOGGLE
+    const navToggle = document.getElementById("navToggle");
+    const navMenu = document.getElementById("navMenu");
+    if (navToggle && navMenu) {
+      navToggle.addEventListener("click", () => navMenu.classList.toggle("active"));
+    }
+
+    // NAVBAR SCROLL EFFECT
+    window.addEventListener('scroll', () => {
+      const navbar = document.getElementById('numeraiNavbar');
+      if (navbar) navbar.classList.toggle('scrolled', window.scrollY > 50);
+    });
+  </script>
+
+  <script src="chatbot.js"></script>
+</body>
+
+</html>

@@ -6,6 +6,7 @@ from database import users_collection
 from routes.auth import router as auth_router
 from routes.numerology import router as numerology_router
 from routes.face import router as face_router
+from routes.chat import router as chat_router
 
 app = FastAPI()
 
@@ -23,6 +24,7 @@ app.add_middleware(
 app.include_router(auth_router)
 app.include_router(numerology_router)
 app.include_router(face_router)
+app.include_router(chat_router)
 
 if os.getenv("ENABLE_TEST_ROUTES") == "1":
     from routes.debug import router as debug_router

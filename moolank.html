@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moolank Calculator | NumerAI – Your Cosmic Root Number</title>
+    <meta name="description"
+        content="Calculate your Moolank and Bhagyank numbers using Vedic Numerology. Discover your life path and cosmic destiny with NumerAI.">
+    <link rel="stylesheet" href="moolank.css">
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- API Config -->
+    <script src="api-config.js"></script>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <header class="numerai-navbar" id="numeraiNavbar">
+        <div class="nav-container">
+            <!-- Logo -->
+            <div class="nav-logo">
+                ✨ <span>NUMERAI</span>
+            </div>
+            <!-- Nav Links -->
+            <nav class="nav-links" id="navMenu">
+                <a href="index.html" class="nav-item">Home</a>
+                <a href="moolank.html" class="nav-item">Moolank</a>
+                <a href="face_reading.html" class="nav-item">Face Reading</a>
+                <a href="Personal-Reading.html" class="nav-item">Personal Reading</a>
+                <a href="Pricing.html" class="nav-item">Pricing</a>
+            </nav>
+            <!-- CTA + Toggle -->
+            <div class="nav-actions">
+                <a href="signup.html" class="btn-start">Get Started</a>
+                <!-- Mobile Toggle -->
+                <div class="nav-toggle" id="navToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+
+    <!-- MOOLANK CALCULATOR SECTION -->
+    <section class="calculator-section">
+        <div class="container">
+
+            <!-- Heading -->
+            <div class="text-center mb-5 fade-up">
+                <span class="badge-ai">🔢 Vedic Numerology</span>
+                <h1 class="title">
+                    Discover Your <span>Cosmic Numbers</span>
+                </h1>
+                <p class="subtitle">
+                    Your birth date holds the key to your life path. Enter your details to unveil
+                    your Moolank (Root Number) and Bhagyank (Destiny Number).
+                </p>
+            </div>
+
+            <div class="row align-items-center g-5">
+
+                <!-- LEFT CONTENT (Form) -->
+                <div class="col-lg-6 fade-left">
+
+                    <!-- Calculator Card -->
+                    <div class="calculator-card">
+                        <h4>Numerical Blueprint</h4>
+                        <p class="small-text">
+                            Enter your date of birth to calculate your personalized numerology profile.
+                        </p>
+
+                        <form id="numerologyForm" class="mt-4">
+                            <div class="mb-4">
+                                <label for="dob" class="form-label">Date of Birth</label>
+                                <input type="date" class="form-control custom-input" id="dob" required>
+                            </div>
+
+                            <button type="submit" class="calculate-btn">
+                                ✨ Reveal My Destiny
+                            </button>
+                        </form>
+
+                        <div id="result" class="mt-4"></div>
+
+                        <small class="privacy-text mt-3 d-block">
+                            <i class="fas fa-shield-alt"></i> Your data is processed securely and remains private.
+                        </small>
+                    </div>
+                </div>
+
+                <!-- RIGHT CONTENT (Illustration/Info) -->
+                <div class="col-lg-6 fade-right">
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-icon">🌞</div>
+                            <div>
+                                <h5>Moolank (Root Number)</h5>
+                                <p>Derived from your birth day. It represents your basic nature, personality traits, and
+                                    inherent talents.</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon">🌙</div>
+                            <div>
+                                <h5>Bhagyank (Destiny Number)</h5>
+                                <p>Calculated from your full birth date. It reveals your life purpose and the path you
+                                    are destined to follow.</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon">🔮</div>
+                            <div>
+                                <h5>AI Insights</h5>
+                                <p>Our advanced algorithms provide personalized predictions based on your unique
+                                    numerical vibrations.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- Knowledge Base -->
+    <section class="knowledge-section">
+        <div class="container">
+            <h2 class="section-title text-center">Numerological Significance</h2>
+            <div class="row g-4 mt-4">
+                <div class="col-md-4">
+                    <div class="knowledge-card">
+                        <h3>Number 1 to 3</h3>
+                        <p>Leadership, Creativity, and Growth. These numbers are driven by solar and jovial energies.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="knowledge-card">
+                        <h3>Number 4 to 6</h3>
+                        <p>Structure, Adaptability, and Harmony. Influenced by Rahu, Mercury, and Venusian vibrations.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="knowledge-card">
+                        <h3>Number 7 to 9</h3>
+                        <p>Intuition, Ambition, and Courage. Guided by Ketu, Saturn, and Martian forces.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Floating Chat Icon -->
+    <div class="chat-float">
+        <a href="https://wa.me/919999999999" target="_blank" title="Chat with us">💬</a>
+    </div>
+
+    <footer class="numerai-footer-alt">
+        <div class="footer-glass">
+
+            <!-- Brand -->
+            <div class="footer-brand-box">
+                <h2>✨ NumerAI</h2>
+                <p>Unlocking cosmic intelligence through AI &amp; numerology.</p>
+            </div>
+
+            <!-- Links -->
+            <div class="footer-links">
+                <h4>Explore</h4>
+                <a href="index.html">Home</a>
+                <a href="moolank.html">Moolank</a>
+                <a href="face_reading.html">Face Reading</a>
+                <a href="Personal-Reading.html">Personal Reading</a>
+                <a href="Pricing.html">Plans</a>
+            </div>
+
+            <!-- Support -->
+            <div class="footer-links">
+                <h4>Support</h4>
+                <a href="Privacy-Policy.html">Privacy Policy</a>
+                <a href="Terms-Conditions.html">Terms &amp; Conditions</a>
+            </div>
+
+            <!-- Social -->
+            <div class="footer-social-alt">
+                <h4>Connect</h4>
+                <div class="social-icons">
+                    <a class="instagram" href="#"><i class="fab fa-instagram"></i></a>
+                    <a class="linkedin" href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a class="whatsapp" href="#"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="footer-bottom">
+            © 2026 NumerAI • Crafted with ✨ Cosmic Energy
+        </div>
+    </footer>
+
+
+    <script>
+        // AUTH GUARD – redirect to login if not logged in
+        const token = localStorage.getItem("vedic_token");
+        if (!token) {
+            alert("Please login to continue");
+            window.location.href = "login.html";
+        }
+
+        // NUMEROLOGY CALCULATION
+        const form = document.getElementById("numerologyForm");
+        if (form) {
+            form.addEventListener("submit", async function (e) {
+                e.preventDefault();
+                const dob = document.getElementById("dob").value;
+                if (!dob) return;
+
+                document.getElementById("result").innerHTML = `<p style="color:#ffcc33">⏳ Calculating your cosmic blueprint...</p>`;
+
+                try {
+                    const response = await fetch(`${window.API_BASE_URL}/api/numerology`, {
+                        method: "POST",
+                        headers: {
+                            "Authorization": `Bearer ${token}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ dob: dob })
+                    });
+
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                        const message = data.detail || "Calculation failed";
+                        document.getElementById("result").innerHTML =
+                            `<p style="color:#ff6b6b">⚠️ ${message}</p>`;
+                        if (response.status === 401) {
+                            localStorage.removeItem("vedic_token");
+                            window.location.href = "login.html";
+                        }
+                        return;
+                    }
+
+                    document.getElementById("result").innerHTML = `
+                        <div class="result-card">
+                            <h3 class="result-title">✨ Your Results</h3>
+                            <div class="result-grid">
+                                <div class="result-item">
+                                    <span class="label">Moolank</span>
+                                    <span class="value">${data.moolank}</span>
+                                </div>
+                                <div class="result-item">
+                                    <span class="label">Bhagyank</span>
+                                    <span class="value">${data.bhagyank}</span>
+                                </div>
+                            </div>
+                            <div class="prediction-box mt-3">
+                                <p><b>Cosmic Prediction:</b> ${data.prediction}</p>
+                            </div>
+                        </div>
+                    `;
+
+                } catch (err) {
+                    document.getElementById("result").innerHTML =
+                        `<p style="color:#ff6b6b">⚠️ Server not reachable. Please ensure the backend is running.</p>`;
+                }
+            });
+        }
+
+        // SCROLL REVEAL
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("show");
+                }
+            });
+        });
+        document.querySelectorAll(".fade-up,.fade-left,.fade-right").forEach(el => observer.observe(el));
+
+        // MOBILE NAVBAR TOGGLE
+        const navToggle = document.getElementById("navToggle");
+        const navMenu = document.getElementById("navMenu");
+        if (navToggle && navMenu) {
+            navToggle.addEventListener("click", () => navMenu.classList.toggle("active"));
+        }
+
+        // NAVBAR SCROLL EFFECT
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('numeraiNavbar');
+            if (navbar) navbar.classList.toggle('scrolled', window.scrollY > 50);
+        });
+    </script>
+
+</body>
+
+</html>
