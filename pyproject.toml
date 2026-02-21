@@ -1,0 +1,22 @@
+[project]
+name = "vedicnumeroai"
+version = "0.1.0"
+description = "Vedic Numero AI Backend"
+requires-python = "==3.12.*"
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "pymongo",
+    "python-jose",
+    "passlib[bcrypt]",
+    "python-multipart",
+    "opencv-python",
+    "pillow",
+    "numpy",
+    "email-validator",
+    "mongomock",
+    "mongita",
+]
+
+[tool.uv]
+managed = true
