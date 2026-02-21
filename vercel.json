@@ -5,18 +5,26 @@
       "src": "backend/main.py",
       "use": "@vercel/python",
       "config": {
-        "runtime": "python3.12",
-        "installCommand": "pip install -r requirements.txt"
+        "runtime": "python3.12"
       }
     }
   ],
-  "routes": [
+  "rewrites": [
     {
-      "src": "/(.*)",
-      "dest": "backend/main.py"
+      "source": "/api/(.*)",
+      "destination": "backend/main.py"
+    },
+    {
+      "source": "/auth/(.*)",
+      "destination": "backend/main.py"
+    },
+    {
+      "source": "/health",
+      "destination": "backend/main.py"
     }
   ],
   "env": {
-    "PYTHON_VERSION": "3.12"
+    "PYTHON_VERSION": "3.12",
+    "ENABLE_TEST_ROUTES": "0"
   }
 }

@@ -1,0 +1,11 @@
+backend/__pycache__
+backend/tests
+backend/uvicorn*.log
+backend/%storage%
+.git
+node_modules
+*.bat
+pyproject.toml
+requirements-dev.txt
+.python-version
+.env.example

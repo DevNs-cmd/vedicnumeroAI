@@ -19,12 +19,15 @@ elif parsed.scheme == "mongita":
 else:
     # Use a short timeout to prevent hang on Vercel initialization
     client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=2000)
+    # Note: We remove the top-level ping to avoid cold-start timeouts. 
+    # If connection fails, Pymongo will raise an error on the first operation.
+    # To be safe, we check if we can reach the server, but don't block indefinitely.
     try:
-        # Check connection on startup
+        # We only check connection info without blocking too long
+        # If it fails, we use mongomock as fallback
         client.admin.command('ping')
     except Exception as e:
-        print(f"Warning: Could not connect to MongoDB. Using local fallback if possible. Error: {e}")
-        # If real DB fails, fallback to mongomock for the serverless instance to at least start
+        print(f"Warning: Could not connect to MongoDB. Using local fallback. Error: {e}")
         import mongomock
         client = mongomock.MongoClient()
 

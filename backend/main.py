@@ -1,4 +1,13 @@
 import os
+import sys
+from pathlib import Path
+
+# Add the current directory to sys.path to ensure modules can be found
+# regardless of where the script is executed from (e.g., Vercel)
+current_dir = Path(__file__).parent
+if str(current_dir) not in sys.path:
+    sys.path.append(str(current_dir))
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 

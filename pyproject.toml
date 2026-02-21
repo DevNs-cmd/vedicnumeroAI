@@ -10,7 +10,7 @@ dependencies = [
     "python-jose",
     "passlib[bcrypt]",
     "python-multipart",
-    "opencv-python",
+    "opencv-python-headless",
     "pillow",
     "numpy",
     "email-validator",
