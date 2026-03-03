@@ -1,11 +1,10 @@
 [project]
-name = "vedicnumeroai"
+name = "api"
 version = "0.1.0"
-description = "Vedic Numero AI Backend"
+description = "Vedic Numero AI API"
 requires-python = ">=3.12"
 dependencies = [
     "fastapi",
-    "uvicorn",
     "pymongo",
     "python-jose",
     "passlib[bcrypt]",
@@ -15,7 +14,6 @@ dependencies = [
     "numpy",
     "email-validator",
     "mongomock",
-    "mongita",
 ]
 
 [tool.uv]

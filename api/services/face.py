@@ -1,7 +1,6 @@
 from typing import Dict, Any
 
-import cv2
-import numpy as np
+# Heavy imports moved inside analyze_face for faster startup
 
 
 def _classify_face_shape(ratio: float) -> str:
@@ -21,6 +20,8 @@ def _prediction_for_shape(shape: str) -> str:
 
 
 def analyze_face(image_bytes: bytes) -> Dict[str, Any]:
+    import cv2
+    import numpy as np
     np_img = np.frombuffer(image_bytes, np.uint8)
     img = cv2.imdecode(np_img, cv2.IMREAD_COLOR)
     if img is None:
