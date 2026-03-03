@@ -2,7 +2,7 @@
     "version": 2,
     "functions": {
         "api/main.py": {
-            "runtime": "python@3.11"
+            "runtime": "python3.12"
         }
     },
     "rewrites": [
@@ -17,6 +17,10 @@
         {
             "source": "/health",
             "destination": "/api/main.py"
+        },
+        {
+            "source": "/(.*)",
+            "destination": "/$1"
         }
     ]
 }
