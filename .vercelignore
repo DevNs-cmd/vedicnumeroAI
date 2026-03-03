@@ -5,7 +5,5 @@ api/%storage%
 .git
 node_modules
 *.bat
-pyproject.toml
 requirements-dev.txt
-.python-version
 .env.example
