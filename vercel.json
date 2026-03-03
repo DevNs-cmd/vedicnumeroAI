@@ -1,30 +1,31 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "builds": [
-    {
-      "src": "backend/main.py",
-      "use": "@vercel/python",
-      "config": {
-        "runtime": "python3.12"
-      }
+  "functions": {
+    "backend/main.py": {
+      "runtime": "@vercel/python"
     }
-  ],
+  },
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "backend/main.py"
+      "destination": "/backend/main.py"
     },
     {
       "source": "/auth/(.*)",
-      "destination": "backend/main.py"
+      "destination": "/backend/main.py"
     },
     {
       "source": "/health",
-      "destination": "backend/main.py"
+      "destination": "/backend/main.py"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/$1"
     }
   ],
   "env": {
     "PYTHON_VERSION": "3.12",
-    "ENABLE_TEST_ROUTES": "0"
+    "ENABLE_TEST_ROUTES": "0",
+    "CORS_ORIGINS": "*"
   }
 }
