@@ -1,7 +1,7 @@
-backend/__pycache__
-backend/tests
-backend/uvicorn*.log
-backend/%storage%
+api/__pycache__
+api/tests
+api/uvicorn*.log
+api/%storage%
 .git
 node_modules
 *.bat

@@ -1,26 +1,17 @@
 {
-  "$schema": "https://openapi.vercel.sh/vercel.json",
-  "functions": {
-    "backend/main.py": {
-      "runtime": "@vercel/python"
-    }
-  },
+  "version": 2,
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "/backend/main.py"
+      "destination": "api/main.py"
     },
     {
       "source": "/auth/(.*)",
-      "destination": "/backend/main.py"
+      "destination": "api/main.py"
     },
     {
       "source": "/health",
-      "destination": "/backend/main.py"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/$1"
+      "destination": "api/main.py"
     }
   ],
   "env": {
