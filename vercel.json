@@ -1,5 +1,4 @@
 {
-  "version": 2,
   "rewrites": [
     {
       "source": "/api/(.*)",
@@ -12,11 +11,14 @@
     {
       "source": "/health",
       "destination": "api/main.py"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/$1"
     }
   ],
   "env": {
-    "PYTHON_VERSION": "3.12",
-    "ENABLE_TEST_ROUTES": "0",
-    "CORS_ORIGINS": "*"
+    "CORS_ORIGINS": "*",
+    "ENABLE_TEST_ROUTES": "0"
   }
 }
