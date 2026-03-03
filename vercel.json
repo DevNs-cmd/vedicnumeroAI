@@ -2,19 +2,18 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "/api/main.py"
+      "destination": "api/main.py"
     },
     {
       "source": "/auth/(.*)",
-      "destination": "/api/main.py"
+      "destination": "api/main.py"
     },
     {
       "source": "/health",
-      "destination": "/api/main.py"
+      "destination": "api/main.py"
     }
   ],
   "env": {
-    "PYTHON_VERSION": "3.12",
     "CORS_ORIGINS": "*",
     "ENABLE_TEST_ROUTES": "0"
   }
