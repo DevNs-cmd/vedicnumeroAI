@@ -1,16 +1,22 @@
 {
-  "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "/api/main.py"
+    "version": 2,
+    "functions": {
+        "api/main.py": {
+            "runtime": "python@3.11"
+        }
     },
-    {
-      "source": "/auth/(.*)",
-      "destination": "/api/main.py"
-    },
-    {
-      "source": "/health",
-      "destination": "/api/main.py"
-    }
-  ]
+    "rewrites": [
+        {
+            "source": "/api/(.*)",
+            "destination": "/api/main.py"
+        },
+        {
+            "source": "/auth/(.*)",
+            "destination": "/api/main.py"
+        },
+        {
+            "source": "/health",
+            "destination": "/api/main.py"
+        }
+    ]
 }
