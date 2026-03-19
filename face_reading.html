@@ -1,293 +1,804 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AI Face Reading | NumerAI – Decode Your Facial Destiny</title>
-  <meta name="description"
-    content="Upload your photo and let NumerAI's AI decode your facial features to reveal numerology insights, personality traits, and cosmic destiny.">
   <link rel="stylesheet" href="face_reading.css">
   <link rel="stylesheet" href="chatbot.css">
-  <!-- Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Google Fonts -->
-  <link
-    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500&display=swap"
-    rel="stylesheet">
-  <!-- Font Awesome -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Inter:wght@400;500&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <!-- API Config -->
   <script src="api-config.js"></script>
-</head>
 
+<style>
+:root {
+  --gold: #ffcc33;
+  --gold2: #ff9f43;
+  --bg-deep: #07071a;
+  --border: rgba(255,204,51,0.18);
+  --text-dim: rgba(255,255,255,0.5);
+}
+
+/* ── OVERLAY ── */
+.reading-overlay {
+  position:fixed;inset:0;background:rgba(0,0,0,0.88);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  z-index:9999;display:flex;align-items:center;justify-content:center;
+  padding:16px;opacity:0;pointer-events:none;transition:opacity 0.4s ease;
+}
+.reading-overlay.active{opacity:1;pointer-events:all;}
+
+/* ── MODAL SHELL ── */
+.reading-modal {
+  position:relative;width:100%;max-width:860px;max-height:92vh;overflow-y:auto;
+  border-radius:24px;
+  background:linear-gradient(145deg,#0d0d1a 0%,#12102a 55%,#0a0a18 100%);
+  border:1px solid var(--border);
+  box-shadow:0 0 100px rgba(255,204,51,0.07),0 40px 80px rgba(0,0,0,0.75),inset 0 1px 0 rgba(255,204,51,0.12);
+  transform:translateY(40px) scale(0.97);
+  transition:transform 0.45s cubic-bezier(0.34,1.56,0.64,1);
+  scrollbar-width:thin;scrollbar-color:rgba(255,204,51,0.25) transparent;
+}
+.reading-overlay.active .reading-modal{transform:translateY(0) scale(1);}
+.reading-modal::-webkit-scrollbar{width:4px;}
+.reading-modal::-webkit-scrollbar-thumb{background:rgba(255,204,51,0.25);border-radius:4px;}
+.reading-modal::before{
+  content:'';position:absolute;inset:0;border-radius:24px;pointer-events:none;
+  background-image:
+    radial-gradient(1px 1px at 8% 12%,rgba(255,255,255,0.55) 0%,transparent 100%),
+    radial-gradient(1px 1px at 28% 75%,rgba(255,255,255,0.4) 0%,transparent 100%),
+    radial-gradient(1px 1px at 55% 22%,rgba(255,255,255,0.5) 0%,transparent 100%),
+    radial-gradient(1px 1px at 78% 58%,rgba(255,255,255,0.4) 0%,transparent 100%),
+    radial-gradient(1.5px 1.5px at 48% 88%,rgba(255,204,51,0.3) 0%,transparent 100%),
+    radial-gradient(1.5px 1.5px at 18% 42%,rgba(255,204,51,0.2) 0%,transparent 100%);
+}
+.modal-close {
+  position:sticky;top:0;left:100%;float:right;z-index:10;
+  width:40px;height:40px;margin:16px 16px 0 0;
+  background:rgba(255,255,255,0.05);border:1px solid rgba(255,204,51,0.2);
+  border-radius:50%;color:var(--gold);font-size:18px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:all 0.25s;
+}
+.modal-close:hover{background:rgba(255,204,51,0.15);transform:rotate(90deg);}
+
+/* ════════════════════════════
+   CINEMATIC ANALYSIS SCREEN
+════════════════════════════ */
+#modalAnalysis{
+  padding:44px 32px 52px;
+  display:flex;flex-direction:column;align-items:center;gap:0;
+}
+
+.scan-stage{
+  position:relative;width:190px;height:190px;margin-bottom:32px;flex-shrink:0;
+}
+.scan-face-preview{
+  position:absolute;inset:22px;border-radius:50%;overflow:hidden;
+  border:2px solid rgba(255,204,51,0.3);background:#0d0d1a;
+}
+.scan-face-preview img{
+  width:100%;height:100%;object-fit:cover;
+  opacity:0;filter:brightness(0.7) saturate(0.5);
+  animation:faceReveal 1s ease 0.3s both;
+}
+@keyframes faceReveal{from{opacity:0;filter:brightness(0) saturate(0);}to{opacity:0.75;filter:brightness(0.7) saturate(0.5);}}
+
+.scan-line{position:absolute;inset:22px;border-radius:50%;overflow:hidden;pointer-events:none;}
+.scan-line::after{
+  content:'';position:absolute;left:0;right:0;height:2px;top:0;
+  background:linear-gradient(90deg,transparent 0%,rgba(255,204,51,0.95) 50%,transparent 100%);
+  box-shadow:0 0 14px rgba(255,204,51,0.6);
+  animation:scanSweep 1.6s ease-in-out infinite;
+}
+@keyframes scanSweep{0%{top:0%;opacity:0;}8%{opacity:1;}92%{opacity:1;}100%{top:100%;opacity:0;}}
+
+.ring{position:absolute;border-radius:50%;border-style:solid;animation:ringRotate var(--spd) linear infinite;}
+.ring-1{inset:9px;border-width:1.5px;border-color:rgba(255,204,51,0.55) transparent rgba(255,204,51,0.55) transparent;--spd:3s;}
+.ring-2{inset:1px;border-width:1px;border-color:transparent rgba(255,159,67,0.4) transparent rgba(255,159,67,0.4);--spd:5s;animation-direction:reverse;}
+.ring-3{inset:-9px;border-width:1px;border-color:rgba(255,204,51,0.13) transparent rgba(255,204,51,0.13) transparent;--spd:9s;}
+@keyframes ringRotate{to{transform:rotate(360deg);}}
+
+.bracket{position:absolute;width:16px;height:16px;}
+.bracket-tl{top:20px;left:20px;border-top:2px solid var(--gold);border-left:2px solid var(--gold);}
+.bracket-tr{top:20px;right:20px;border-top:2px solid var(--gold);border-right:2px solid var(--gold);}
+.bracket-bl{bottom:20px;left:20px;border-bottom:2px solid var(--gold);border-left:2px solid var(--gold);}
+.bracket-br{bottom:20px;right:20px;border-bottom:2px solid var(--gold);border-right:2px solid var(--gold);}
+
+.landmark{
+  position:absolute;width:5px;height:5px;background:var(--gold);border-radius:50%;
+  box-shadow:0 0 6px var(--gold);opacity:0;
+  animation:ldmkOn 0.25s ease both;
+}
+@keyframes ldmkOn{to{opacity:1;}}
+
+.analysis-title{
+  font-family:'Playfair Display',serif;font-size:clamp(20px,4vw,27px);
+  color:#fff;text-align:center;margin-bottom:4px;
+}
+.analysis-title span{color:var(--gold);}
+.analysis-sub{font-family:'Inter',sans-serif;font-size:12px;color:var(--text-dim);text-align:center;margin-bottom:22px;}
+
+.analysis-steps{display:flex;flex-direction:column;gap:11px;width:100%;max-width:400px;}
+.a-step{
+  display:flex;align-items:center;gap:12px;
+  opacity:0.22;transition:opacity 0.4s ease,transform 0.4s ease;
+  transform:translateX(-10px);
+}
+.a-step.active{opacity:1;transform:translateX(0);}
+.a-step.done{opacity:0.5;}
+.a-step-dot{
+  width:30px;height:30px;border-radius:50%;flex-shrink:0;
+  background:rgba(255,204,51,0.07);border:1px solid rgba(255,204,51,0.18);
+  display:flex;align-items:center;justify-content:center;font-size:14px;
+  transition:all 0.4s;
+}
+.a-step.active .a-step-dot{
+  background:rgba(255,204,51,0.16);border-color:var(--gold);
+  box-shadow:0 0 14px rgba(255,204,51,0.3);
+  animation:dotPop 0.5s ease;
+}
+@keyframes dotPop{0%,100%{transform:scale(1);}50%{transform:scale(1.28);}}
+.a-step-info{flex:1;}
+.a-step-label{
+  font-family:'Cinzel',serif;font-size:10px;letter-spacing:2px;
+  text-transform:uppercase;color:rgba(255,255,255,0.38);
+}
+.a-step.active .a-step-label{color:var(--gold);}
+.a-step-bar{height:2px;background:rgba(255,255,255,0.06);border-radius:2px;margin-top:6px;overflow:hidden;}
+.a-step-fill{
+  height:100%;width:0%;border-radius:2px;
+  background:linear-gradient(90deg,var(--gold),var(--gold2));
+  transition:width 0.9s cubic-bezier(0.22,1,0.36,1);
+}
+
+.data-stream{margin-top:22px;width:100%;max-width:400px;height:22px;overflow:hidden;}
+.data-stream-inner{
+  font-family:'Courier New',monospace;font-size:10px;
+  color:rgba(255,204,51,0.5);letter-spacing:1px;text-align:center;
+  animation:streamIn 0.4s ease both;
+}
+@keyframes streamIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+/* ════════════════════════
+   RESULT UI
+════════════════════════ */
+.modal-header-area{text-align:center;padding:8px 32px 24px;}
+.modal-badge{
+  display:inline-block;font-family:'Cinzel',serif;font-size:10px;letter-spacing:3px;
+  text-transform:uppercase;color:var(--gold);background:rgba(255,204,51,0.08);
+  border:1px solid rgba(255,204,51,0.25);border-radius:20px;padding:5px 16px;margin-bottom:12px;
+}
+.modal-title{font-family:'Playfair Display',serif;font-size:clamp(22px,4vw,32px);font-weight:700;color:#fff;margin-bottom:4px;}
+.modal-title span{color:var(--gold);}
+.modal-subtitle{font-family:'Inter',sans-serif;font-size:13px;color:var(--text-dim);}
+.gold-line{width:80px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:16px auto;}
+
+.modal-preview-row{display:flex;align-items:center;gap:20px;padding:0 32px 24px;}
+.preview-img-wrap{flex-shrink:0;width:80px;height:80px;border-radius:50%;border:2px solid rgba(255,204,51,0.45);overflow:hidden;box-shadow:0 0 24px rgba(255,204,51,0.12);}
+.preview-img-wrap img{width:100%;height:100%;object-fit:cover;}
+.preview-meta{flex:1;}
+.preview-name{font-family:'Playfair Display',serif;font-size:15px;color:#fff;margin-bottom:6px;}
+.confidence-bar-wrap{display:flex;align-items:center;gap:10px;}
+.confidence-bar{flex:1;height:5px;background:rgba(255,255,255,0.07);border-radius:10px;overflow:hidden;}
+.confidence-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:10px;transition:width 1.4s cubic-bezier(0.22,1,0.36,1);}
+.confidence-pct{font-family:'Cinzel',serif;font-size:11px;color:var(--gold);white-space:nowrap;}
+
+.stats-row{display:flex;flex-wrap:wrap;gap:8px;padding:0 32px 24px;}
+.stat-pill{
+  display:flex;align-items:center;gap:7px;
+  background:rgba(255,204,51,0.06);border:1px solid rgba(255,204,51,0.16);
+  border-radius:30px;padding:6px 14px;
+  font-family:'Inter',sans-serif;font-size:12px;color:rgba(255,255,255,0.8);
+  animation:fadeUp 0.5s ease both;
+}
+.stat-pill strong{color:var(--gold);margin-left:2px;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+.planet-banner{
+  margin:0 32px 24px;
+  background:linear-gradient(135deg,rgba(255,204,51,0.09),rgba(255,159,67,0.07));
+  border:1px solid rgba(255,204,51,0.18);border-radius:16px;
+  padding:16px 20px;display:flex;align-items:center;gap:14px;
+}
+.planet-icon{font-size:32px;flex-shrink:0;}
+.planet-text{font-family:'Inter',sans-serif;font-size:13px;color:rgba(255,255,255,0.75);line-height:1.6;}
+.planet-text strong{display:block;font-family:'Cinzel',serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:4px;}
+
+.prediction-tabs{padding:0 32px 8px;}
+.tab-nav{display:flex;gap:8px;margin-bottom:16px;background:rgba(255,255,255,0.03);border-radius:14px;padding:4px;border:1px solid rgba(255,255,255,0.05);}
+.tab-btn{flex:1;background:transparent;border:none;border-radius:10px;padding:10px 6px;font-family:'Cinzel',serif;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.38);cursor:pointer;transition:all 0.3s;}
+.tab-btn.active{background:linear-gradient(135deg,rgba(255,204,51,0.18),rgba(255,159,67,0.09));color:var(--gold);border:1px solid rgba(255,204,51,0.22);}
+.tab-btn .tab-icon{display:block;font-size:18px;margin-bottom:4px;}
+.tab-pane{display:none;}
+.tab-pane.active{display:block;animation:fadeIn 0.35s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+.prediction-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:20px;font-family:'Inter',sans-serif;font-size:14px;line-height:1.8;color:rgba(255,255,255,0.78);position:relative;overflow:hidden;}
+.prediction-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+.prediction-card-title{font-family:'Playfair Display',serif;font-size:17px;color:#fff;margin-bottom:10px;}
+.prediction-card-title span{color:var(--gold);}
+
+.features-section{padding:8px 32px 24px;}
+.features-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,204,51,0.6);margin-bottom:14px;}
+.features-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px;}
+.feature-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:14px 16px;transition:border-color 0.2s,background 0.2s;animation:fadeUp 0.4s ease both;}
+.feature-card:hover{background:rgba(255,204,51,0.05);border-color:rgba(255,204,51,0.2);}
+.feature-card-top{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.feature-emoji{font-size:20px;}
+.feature-label{font-family:'Cinzel',serif;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,204,51,0.7);}
+.feature-value{font-family:'Playfair Display',serif;font-size:14px;color:#fff;margin-bottom:6px;}
+.feature-meaning{font-family:'Inter',sans-serif;font-size:11.5px;color:var(--text-dim);line-height:1.6;}
+.feature-planet-badge{display:inline-block;margin-top:6px;font-family:'Cinzel',serif;font-size:9px;letter-spacing:1px;color:var(--gold);background:rgba(255,204,51,0.08);border:1px solid rgba(255,204,51,0.2);border-radius:20px;padding:2px 10px;}
+
+.modal-error{text-align:center;padding:50px 32px;}
+.error-icon{font-size:48px;margin-bottom:16px;}
+.error-title{font-family:'Playfair Display',serif;font-size:20px;color:#ff6b6b;margin-bottom:8px;}
+.error-msg{font-family:'Inter',sans-serif;font-size:13px;color:var(--text-dim);}
+.btn-retry{margin-top:20px;padding:10px 28px;background:rgba(255,204,51,0.1);border:1px solid rgba(255,204,51,0.35);border-radius:30px;color:var(--gold);font-family:'Cinzel',serif;font-size:11px;letter-spacing:2px;cursor:pointer;text-transform:uppercase;transition:all 0.2s;}
+.btn-retry:hover{background:rgba(255,204,51,0.2);}
+
+.modal-footer-area{padding:16px 32px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;border-top:1px solid rgba(255,255,255,0.05);}
+.footer-note{font-family:'Inter',sans-serif;font-size:11px;color:rgba(255,255,255,0.28);}
+.btn-download{padding:10px 24px;background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;border-radius:30px;color:#0d0d1a;font-family:'Cinzel',serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;font-weight:600;transition:all 0.25s;box-shadow:0 4px 20px rgba(255,204,51,0.22);}
+.btn-download:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(255,204,51,0.38);}
+
+/* ── Responsive ── */
+@media(max-width:600px){
+  .reading-modal{border-radius:16px;}
+  .modal-header-area,.modal-preview-row,.stats-row,.planet-banner,
+  .prediction-tabs,.features-section,.modal-footer-area{padding-left:16px;padding-right:16px;}
+  .planet-banner{margin:0 16px 24px;}
+  #modalAnalysis{padding:32px 16px 44px;}
+  .upgrade-inner{padding:28px 20px 24px;}
+}
+</style>
+</head>
 <body>
 
-  <!-- NAVBAR -->
-  <header class="numerai-navbar" id="numeraiNavbar">
-    <div class="nav-container">
-      <!-- Logo -->
-      <div class="nav-logo">
-        ✨ <span>NUMERAI</span>
+<!-- NAVBAR -->
+<header class="numerai-navbar" id="numeraiNavbar">
+  <div class="nav-container">
+    <div class="nav-logo">✨ <span>NUMERAI</span></div>
+    <nav class="nav-links" id="navMenu">
+      <a href="index.html" class="nav-item">Home</a>
+      <a href="moolank.html" class="nav-item">Moolank</a>
+      <a href="face_reading.html" class="nav-item">Face Reading</a>
+      <a href="Personal-Reading.html" class="nav-item">Personal Reading</a>
+      <a href="Pricing.html" class="nav-item">Pricing</a>
+    </nav>
+    <div class="nav-actions">
+      <a href="signup.html" class="btn-start">Get Started</a>
+      <div class="nav-toggle" id="navToggle"><span></span><span></span><span></span></div>
+    </div>
+  </div>
+</header>
+
+<!-- FACE READING SECTION -->
+<section class="face-section">
+  <div class="container">
+    <div class="text-center mb-5 fade-up">
+      <span class="badge-ai">✨ AI Face Reading</span>
+      <h1 class="title">Decode Your <span>Facial Destiny</span></h1>
+      <p class="subtitle">Ancient physiognomy meets cutting-edge AI. Discover what your face reveals about your personality, fortune, and life path.</p>
+    </div>
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6 text-center fade-left">
+        <div class="face-wrapper"><img src="AI face.png" alt="AI Face Analysis" class="face-img"></div>
       </div>
-      <!-- Nav Links -->
-      <nav class="nav-links" id="navMenu">
-        <a href="index.html" class="nav-item">Home</a>
-        <a href="moolank.html" class="nav-item">Moolank</a>
-        <a href="face_reading.html" class="nav-item">Face Reading</a>
-        <a href="Personal-Reading.html" class="nav-item">Personal Reading</a>
-        <a href="Pricing.html" class="nav-item">Pricing</a>
-      </nav>
-      <!-- CTA + Toggle -->
-      <div class="nav-actions">
-        <a href="signup.html" class="btn-start">Get Started</a>
-        <!-- Mobile Toggle -->
-        <div class="nav-toggle" id="navToggle">
-          <span></span>
-          <span></span>
-          <span></span>
+      <div class="col-lg-6 fade-right">
+        <div class="upload-card">
+          <h4>Start Your Face Reading</h4>
+          <p class="small-text">Upload a clear, front-facing photo to receive your personalized facial analysis and numerology insights.</p>
+          <div class="upload-box" id="uploadBox">
+            <div id="uploadDefaultUI">
+              <div class="upload-icon">📷</div>
+              <p>Ready for your cosmic scan?<br>Open camera for real-time analysis</p>
+              <button class="upload-btn" id="openCameraButton" style="border:none; width: 100%;">
+                Open Camera
+              </button>
+              <p class="mt-2" style="font-size: 0.8rem; color: var(--text-dim);">or <span id="switchToUpload" style="text-decoration: underline; cursor: pointer;">upload a photo</span></p>
+            </div>
+            <input type="file" id="imageInput" accept="image/*" hidden>
+          </div>
+          <small class="privacy-text" style="display: block; text-align: center; margin-top: 15px; color: var(--text-dim);">🔒 Your scans are processed securely and never stored.</small>
+        </div>
+        <div class="feature-list mt-4">
+          <div class="feature-item">⭐ <strong>Facial Mapping</strong><span>Advanced AI analyzes 68 facial landmarks</span></div>
+          <div class="feature-item">🧠 <strong>Personality Analysis</strong><span>Reveal hidden traits from your features</span></div>
+          <div class="feature-item">🔢 <strong>Numerology Integration</strong><span>Connect facial patterns with numbers</span></div>
         </div>
       </div>
     </div>
-  </header>
+  </div>
+</section>
+
+<!-- How it works -->
+<section class="how-it-works">
+  <h2 class="section-title">How It Works</h2>
+  <div class="steps-wrapper">
+    <div class="step-card"><span class="step-number">01</span><h4>Upload Photo</h4><p>Take or upload a clear front-facing photo</p></div>
+    <span class="step-arrow">➜</span>
+    <div class="step-card"><span class="step-number">02</span><h4>AI Analysis</h4><p>Our AI maps 68 facial landmarks</p></div>
+    <span class="step-arrow">➜</span>
+    <div class="step-card"><span class="step-number">03</span><h4>Get Insights</h4><p>Receive your personalized reading</p></div>
+  </div>
+</section>
+
+<footer class="numerai-footer-alt">
+  <div class="footer-glass">
+    <div class="footer-brand-box"><h2>✨ NumerAI</h2><p>Unlocking cosmic intelligence through AI &amp; numerology.</p></div>
+    <div class="footer-links"><h4>Explore</h4><a href="index.html">Home</a><a href="Pricing.html">Plans</a><a href="About us.html">About</a><a href="contact.html">Contact</a></div>
+    <div class="footer-links"><h4>Support</h4><a href="Privacy-Policy.html">Privacy Policy</a><a href="Terms-Conditions.html">Terms &amp; Conditions</a></div>
+    <div class="footer-social-alt"><h4>Connect</h4><div class="social-icons">
+      <a class="instagram" href="#"><i class="fab fa-instagram"></i></a>
+      <a class="linkedin" href="#"><i class="fab fa-linkedin-in"></i></a>
+      <a class="whatsapp" href="#"><i class="fab fa-whatsapp"></i></a>
+    </div></div>
+  </div>
+  <div class="footer-bottom">© 2026 NumerAI • Crafted with ✨ Cosmic Energy</div>
+</footer>
 
 
-  <!-- FACE READING SECTION -->
-  <section class="face-section">
-    <div class="container">
+<!-- ════════════════════════════════════
+     PREDICTION MODAL
+════════════════════════════════════ -->
+<div class="reading-overlay" id="readingOverlay" role="dialog" aria-modal="true">
+  <div class="reading-modal" id="readingModal">
+    <button class="modal-close" id="modalClose" style="display:none;" aria-label="Close">✕</button>
 
-      <!-- Heading -->
-      <div class="text-center mb-5 fade-up">
-        <span class="badge-ai">✨ AI Face Reading</span>
-        <h1 class="title">
-          Decode Your <span>Facial Destiny</span>
-        </h1>
-        <p class="subtitle">
-          Ancient physiognomy meets cutting-edge AI. Discover what your face reveals
-          about your personality, fortune, and life path.
-        </p>
+    <!-- ANALYSIS ANIMATION -->
+    <div id="modalAnalysis">
+      <div class="scan-stage">
+        <div class="scan-face-preview">
+          <video id="scanVideo" autoplay playsinline style="width:100%; height:100%; object-fit:cover; transform: scaleX(-1); display:none;"></video>
+          <img id="scanFaceImg" src="" alt="">
+          <div id="countdownOverlay" style="position:absolute; inset:0; display:none; align-items:center; justify-content:center; font-size:64px; font-weight:bold; color:var(--gold); text-shadow:0 0 20px rgba(0,0,0,0.8); z-index:10; font-family:'Cinzel', serif;">5</div>
+        </div>
+        <div class="scan-line"></div>
+        <div class="ring ring-1"></div>
+        <div class="ring ring-2"></div>
+        <div class="ring ring-3"></div>
+        <div class="bracket bracket-tl"></div>
+        <div class="bracket bracket-tr"></div>
+        <div class="bracket bracket-bl"></div>
+        <div class="bracket bracket-br"></div>
+        <div id="landmarkDots"></div>
       </div>
+      <div class="analysis-title">Mapping Your <span>Cosmic Face</span></div>
+      <div class="analysis-sub">Ancient astrology meets modern AI</div>
+      <div class="analysis-steps" id="analysisSteps">
+        <div class="a-step" id="step0"><div class="a-step-dot">👁️</div><div class="a-step-info"><div class="a-step-label">Face Detection &amp; Landmark Mapping</div><div class="a-step-bar"><div class="a-step-fill" id="fill0"></div></div></div></div>
+        <div class="a-step" id="step1"><div class="a-step-dot">🔬</div><div class="a-step-info"><div class="a-step-label">Feature Extraction — 68 Key Points</div><div class="a-step-bar"><div class="a-step-fill" id="fill1"></div></div></div></div>
+        <div class="a-step" id="step2"><div class="a-step-dot">🪐</div><div class="a-step-info"><div class="a-step-label">Planetary Energy Alignment</div><div class="a-step-bar"><div class="a-step-fill" id="fill2"></div></div></div></div>
+        <div class="a-step" id="step3"><div class="a-step-dot">🔮</div><div class="a-step-info"><div class="a-step-label">Generating Your Cosmic Blueprint</div><div class="a-step-bar"><div class="a-step-fill" id="fill3"></div></div></div></div>
+      </div>
+      <div class="data-stream"><div class="data-stream-inner" id="dataTicker">Initializing face matrix…</div></div>
+    </div>
 
-      <div class="row align-items-center g-5">
+    <!-- ERROR -->
+    <div class="modal-error" id="modalError" style="display:none;">
+      <div class="error-icon">🌑</div>
+      <div class="error-title">Reading Incomplete</div>
+      <div class="error-msg" id="errorMsg">No face detected. Please use a clear, front-facing photo.</div>
+      <button class="btn-retry" onclick="closeModal()">Try Another Photo</button>
+    </div>
 
-        <!-- LEFT IMAGE -->
-        <div class="col-lg-6 text-center fade-left">
-          <div class="face-wrapper">
-            <img src="AI face.png" alt="AI Face Analysis" class="face-img">
+    <!-- RESULT -->
+    <div id="modalResult" style="display:none;">
+      <div class="modal-header-area">
+        <div class="modal-badge">✦ Astrological Face Reading ✦</div>
+        <h2 class="modal-title">Your <span>Cosmic Blueprint</span></h2>
+        <div class="gold-line"></div>
+        <div class="modal-subtitle" id="modalSubtitle">Analysis complete • Powered by NumerAI</div>
+      </div>
+      <div class="modal-preview-row">
+        <div class="preview-img-wrap"><img id="previewImg" src="" alt=""></div>
+        <div class="preview-meta">
+          <div class="preview-name" id="previewLabel">Face Reading Complete</div>
+          <div class="confidence-bar-wrap">
+            <div class="confidence-bar"><div class="confidence-fill" id="confidenceFill" style="width:0%"></div></div>
+            <div class="confidence-pct" id="confidencePct">—</div>
           </div>
         </div>
-
-        <!-- RIGHT CONTENT -->
-        <div class="col-lg-6 fade-right">
-
-          <!-- Upload Card -->
-          <div class="upload-card">
-            <h4>Start Your Face Reading</h4>
-            <p class="small-text">
-              Upload a clear, front-facing photo to receive your personalized
-              facial analysis and numerology insights.
-            </p>
-
-            <div class="upload-box">
-              <div class="upload-icon">⬆</div>
-              <p>Drop your photo here<br>or click to browse</p>
-
-              <label class="upload-btn">
-                Choose Photo
-                <input type="file" id="imageInput" accept="image/*" hidden>
-              </label>
-            </div>
-
-            <div id="result" style="margin-top:20px;"></div>
-
-            <small class="privacy-text">
-              Your photos are processed securely and never stored.
-            </small>
-          </div>
-
-          <!-- Features -->
-          <div class="feature-list mt-4">
-            <div class="feature-item">
-              ⭐ <strong>Facial Mapping</strong>
-              <span>Advanced AI analyzes 68 facial landmarks</span>
-            </div>
-            <div class="feature-item">
-              🧠 <strong>Personality Analysis</strong>
-              <span>Reveal hidden traits from your features</span>
-            </div>
-            <div class="feature-item">
-              🔢 <strong>Numerology Integration</strong>
-              <span>Connect facial patterns with numbers</span>
-            </div>
-          </div>
-
+      </div>
+      <div class="stats-row" id="statsPills"></div>
+      <div class="planet-banner">
+        <div class="planet-icon" id="planetIcon">🪐</div>
+        <div class="planet-text"><strong>Planetary Influence</strong><span id="planetSummary">Loading…</span></div>
+      </div>
+      <div class="prediction-tabs">
+        <div class="tab-nav">
+          <button class="tab-btn active" data-tab="personality"><span class="tab-icon">🧠</span>Personality</button>
+          <button class="tab-btn" data-tab="career"><span class="tab-icon">💼</span>Career</button>
+          <button class="tab-btn" data-tab="relationship"><span class="tab-icon">❤️</span>Relationship</button>
         </div>
+        <div class="tab-pane active" id="tab-personality"><div class="prediction-card"><div class="prediction-card-title"><span>✦</span> Personality Analysis</div><div id="personalityText">—</div></div></div>
+        <div class="tab-pane" id="tab-career"><div class="prediction-card"><div class="prediction-card-title"><span>✦</span> Career Prediction</div><div id="careerText">—</div></div></div>
+        <div class="tab-pane" id="tab-relationship"><div class="prediction-card"><div class="prediction-card-title"><span>✦</span> Relationship Traits</div><div id="relationshipText">—</div></div></div>
       </div>
-
-    </div>
-  </section>
-
-
-  <!-- How it works -->
-  <section class="how-it-works">
-    <h2 class="section-title">How It Works</h2>
-
-    <div class="steps-wrapper">
-      <!-- Step 1 -->
-      <div class="step-card">
-        <span class="step-number">01</span>
-        <h4>Upload Photo</h4>
-        <p>Take or upload a clear front-facing photo</p>
+      <div class="features-section">
+        <div class="features-title">✦ Detailed Feature Readings</div>
+        <div class="features-grid" id="featuresGrid"></div>
       </div>
-
-      <span class="step-arrow">➜</span>
-
-      <!-- Step 2 -->
-      <div class="step-card">
-        <span class="step-number">02</span>
-        <h4>AI Analysis</h4>
-        <p>Our AI maps 68 facial landmarks</p>
-      </div>
-
-      <span class="step-arrow">➜</span>
-
-      <!-- Step 3 -->
-      <div class="step-card">
-        <span class="step-number">03</span>
-        <h4>Get Insights</h4>
-        <p>Receive your personalized reading</p>
+      <div class="modal-footer-area" id="resultFooter">
+        <div class="footer-note">🔒 Image never stored • NumerAI © 2026</div>
+        <button class="btn-download" id="btnSaveReport">✦ Save My Reading</button>
       </div>
     </div>
-  </section>
+
+  </div>
+</div>
 
 
 
-  <footer class="numerai-footer-alt">
-    <div class="footer-glass">
-
-      <!-- Brand -->
-      <div class="footer-brand-box">
-        <h2>✨ NumerAI</h2>
-        <p>Unlocking cosmic intelligence through AI &amp; numerology.</p>
-      </div>
-
-      <!-- Links -->
-      <div class="footer-links">
-        <h4>Explore</h4>
-        <a href="index.html">Home</a>
-        <a href="Pricing.html">Plans</a>
-        <a href="About us.html">About</a>
-        <a href="contact.html">Contact</a>
-      </div>
-
-      <!-- Support -->
-      <div class="footer-links">
-        <h4>Support</h4>
-        <a href="Privacy-Policy.html">Privacy Policy</a>
-        <a href="Terms-Conditions.html">Terms &amp; Conditions</a>
-      </div>
-
-      <!-- Social -->
-      <div class="footer-social-alt">
-        <h4>Connect</h4>
-        <div class="social-icons">
-          <a class="instagram" href="#"><i class="fab fa-instagram"></i></a>
-          <a class="linkedin" href="#"><i class="fab fa-linkedin-in"></i></a>
-          <a class="whatsapp" href="#"><i class="fab fa-whatsapp"></i></a>
-        </div>
-      </div>
-
-    </div>
-
-    <div class="footer-bottom">
-      © 2026 NumerAI • Crafted with ✨ Cosmic Energy
-    </div>
-  </footer>
 
 
-  <script>
-    // AUTH GUARD – redirect to login if not logged in
-    const token = localStorage.getItem("vedic_token");
-    if (!token) {
-      alert("Please login to continue");
-      window.location.href = "login.html";
-    }
+<script>
+/* ─── Config ───────────────────────────── */
+const FEATURE_META = {
+  face_shape:{emoji:'🔮',label:'Face Shape'},
+  forehead:{emoji:'🧠',label:'Forehead'},
+  eye_distance:{emoji:'👁️',label:'Eye Distance'},
+  eyebrows:{emoji:'〰️',label:'Eyebrows'},
+  nose:{emoji:'👃',label:'Nose'},
+  lips:{emoji:'💋',label:'Lips'},
+  jawline:{emoji:'💪',label:'Jawline'},
+  symmetry:{emoji:'⚖️',label:'Symmetry'},
+};
+const SHAPE_PLANETS={Oval:'♃',Round:'♀',Long:'♄',Square:'♂',Heart:'♀'};
 
-    // FACE IMAGE UPLOAD & ANALYSIS
-    const imageInput = document.getElementById("imageInput");
-    if (imageInput) {
-      imageInput.addEventListener("change", async function () {
-        const file = this.files[0];
-        if (!file) return;
+/* Landmark dot positions (% within scan-stage circle) */
+const LDMK=[
+  {t:'30%',l:'38%'},{t:'30%',l:'58%'},{t:'40%',l:'34%'},{t:'40%',l:'63%'},
+  {t:'50%',l:'50%'},{t:'58%',l:'37%'},{t:'58%',l:'61%'},{t:'64%',l:'50%'},
+  {t:'72%',l:'43%'},{t:'72%',l:'57%'},{t:'47%',l:'50%'},{t:'56%',l:'44%'},
+  {t:'56%',l:'56%'},{t:'82%',l:'50%'},
+];
 
-        const formData = new FormData();
-        formData.append("file", file);
+const TICKS=[
+  'Initializing face matrix…','Detecting facial geometry…',
+  'Mapping 68 key landmarks…','Analyzing eye constellation…',
+  'Reading forehead meridians…','Calculating nose numerology…',
+  'Decoding lip vibration…','Measuring jaw strength…',
+  'Aligning planetary nodes…','Channeling Jupiter energy…',
+  'Computing symmetry index…','Synthesizing cosmic blueprint…',
+  'Finalizing your reading…',
+];
 
-        document.getElementById("result").innerHTML = `<p style="color:#ffcc33">⏳ Analyzing your face...</p>`;
 
-        try {
-          const response = await fetch(`${window.API_BASE_URL}/api/face-read`, {
-            method: "POST",
-            headers: { "Authorization": `Bearer ${token}` },
-            body: formData
-          });
 
-          const data = await response.json();
+/* ─── Modal state ──────────────────────── */
+function openModal(){
+  document.getElementById('readingOverlay').classList.add('active');
+  document.body.style.overflow='hidden';
+}
+function closeModal(){
+  document.getElementById('readingOverlay').classList.remove('active');
+  document.body.style.overflow='';
+  document.getElementById('imageInput').value='';
+  resetAnim();
+}
 
-          if (!response.ok) {
-            const message = data.detail || "Face reading failed";
-            document.getElementById("result").innerHTML =
-              `<p style="color:#ff6b6b">⚠️ ${message}</p>`;
-            if (response.status === 401) {
-              localStorage.removeItem("vedic_token");
-              window.location.href = "login.html";
-            }
-            return;
-          }
 
-          // Format output cleanly (confidence may be null)
-          const confidence = data.confidence !== null ? `${data.confidence}%` : 'High';
-          document.getElementById("result").innerHTML = `
-                        <div style="background:rgba(255,204,51,0.1); border:1px solid rgba(255,204,51,0.3); border-radius:12px; padding:20px; margin-top:16px;">
-                            <h3 style="color:#ffcc33; font-family:'Playfair Display',serif; margin-bottom:12px;">✨ Face Reading Result</h3>
-                            <p><b>Face Shape:</b> ${data.face_shape || 'N/A'}</p>
-                            <p><b>Confidence:</b> ${confidence}</p>
-                            <p><b>Numerology Insight:</b> ${data.numerology_prediction || 'N/A'}</p>
-                        </div>
-                    `;
+/* ─── View helpers ─────────────────────── */
+function showView(name){
+  document.getElementById('modalAnalysis').style.display = name==='analysis'?'flex':'none';
+  document.getElementById('modalError').style.display    = name==='error'  ?'block':'none';
+  document.getElementById('modalResult').style.display   = name==='result' ?'block':'none';
+  document.getElementById('modalClose').style.display    = name==='analysis'?'none':'flex';
+}
 
-        } catch (err) {
-          document.getElementById("result").innerHTML =
-            `<p style="color:#ff6b6b">⚠️ Server not reachable. Please try again later.</p>`;
-        }
-      });
-    }
+/* ─── Analysis animation ───────────────── */
+let tickTimer=null, tickIdx=0;
 
-    // SCROLL REVEAL
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("show");
-        }
-      });
+function resetAnim(){
+  clearInterval(tickTimer); tickIdx=0;
+  [0,1,2,3].forEach(i=>{
+    document.getElementById('step'+i).className='a-step';
+    document.getElementById('fill'+i).style.width='0%';
+  });
+  document.getElementById('landmarkDots').innerHTML='';
+  document.getElementById('scanFaceImg').src='';
+}
+
+/* ─── Camera Handler ────────────────────── */
+let stream = null;
+const openCamBtn = document.getElementById('openCameraButton');
+const switchToUpload = document.getElementById('switchToUpload');
+
+if(switchToUpload) {
+  switchToUpload.addEventListener('click', () => {
+    imageInput.click();
+  });
+}
+
+async function startCamera() {
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({ 
+      video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 720 } } 
     });
-    document.querySelectorAll(".fade-up,.fade-left,.fade-right").forEach(el => observer.observe(el));
+    
+    const video = document.getElementById('scanVideo');
+    const img = document.getElementById('scanFaceImg');
+    const countdown = document.getElementById('countdownOverlay');
+    
+    video.srcObject = stream;
+    video.style.display = 'block';
+    img.style.display = 'none';
+    countdown.style.display = 'flex';
+    
+    openModal();
+    showView('analysis');
+    resetAnim();
+    
+    let secondsLeft = 5;
+    countdown.textContent = secondsLeft;
+    
+    const timer = setInterval(() => {
+      secondsLeft--;
+      countdown.textContent = secondsLeft;
+      if (secondsLeft <= 0) {
+        clearInterval(timer);
+        captureFrame();
+      }
+    }, 1000);
+    
+  } catch (err) {
+    console.error("Camera error:", err);
+    alert("Could not access camera. Please check permissions or upload a photo instead.");
+  }
+}
 
-    // MOBILE NAVBAR TOGGLE
-    const navToggle = document.getElementById("navToggle");
-    const navMenu = document.getElementById("navMenu");
-    if (navToggle && navMenu) {
-      navToggle.addEventListener("click", () => navMenu.classList.toggle("active"));
+function captureFrame() {
+  const video = document.getElementById('scanVideo');
+  const countdown = document.getElementById('countdownOverlay');
+  const canvas = document.createElement('canvas');
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  const ctx = canvas.getContext('2d');
+  
+  // Flip horizontally for natural look or keep as is. Usually capture as is.
+  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+  
+  canvas.toBlob(blob => {
+    const file = new File([blob], "camera_capture.jpg", { type: "image/jpeg" });
+    const imageURL = URL.createObjectURL(file);
+    
+    // Stop stream
+    if (stream) {
+      stream.getTracks().forEach(track => track.stop());
     }
+    
+    video.style.display = 'none';
+    countdown.style.display = 'none';
+    const scanImg = document.getElementById('scanFaceImg');
+    scanImg.style.display = 'block';
+    scanImg.src = imageURL;
+    
+    // Start Analysis
+    const apiPromise = (async () => {
+      const fd = new FormData();
+      fd.append('file', file);
+      const res = await fetch(`${window.API_BASE_URL}/api/face-read`, { method: 'POST', body: fd });
+      const d = await res.json();
+      if (!res.ok) throw new Error(d.detail || 'Face reading failed.');
+      return d;
+    })();
+    
+    runAnim(imageURL, apiPromise);
+  }, 'image/jpeg', 0.95);
+}
 
-    // NAVBAR SCROLL EFFECT
-    window.addEventListener('scroll', () => {
-      const navbar = document.getElementById('numeraiNavbar');
-      if (navbar) navbar.classList.toggle('scrolled', window.scrollY > 50);
+if(openCamBtn) {
+  openCamBtn.addEventListener('click', startCamera);
+}
+
+function runAnim(imageURL, apiPromise) {
+  // If we are already in camera mode, skip setting scanFaceImg again
+  const scanVideo = document.getElementById('scanVideo');
+  const scanFaceImg = document.getElementById('scanFaceImg');
+  if (scanVideo && scanVideo.style.display !== 'block') {
+    scanFaceImg.src = imageURL;
+    scanFaceImg.style.display = 'block';
+  }
+  
+  showView('analysis');
+  document.getElementById('readingModal').scrollTop = 0;
+
+  /* ticker */
+  function tick(){
+    const el=document.getElementById('dataTicker');
+    if (!el) return;
+    el.style.animation='none'; el.offsetHeight;
+    el.style.animation='streamIn 0.4s ease both';
+    el.textContent=TICKS[tickIdx%TICKS.length]; tickIdx++;
+  }
+  tick(); tickTimer=setInterval(tick,850);
+
+  /* landmark dots stagger */
+  const dc=document.getElementById('landmarkDots');
+  if (dc) {
+    dc.innerHTML = '';
+    LDMK.forEach((p,i)=>{
+      setTimeout(()=>{
+        const d=document.createElement('div');
+        d.className='landmark';
+        d.style.top=p.t; d.style.left=p.l; d.style.animationDelay='0s';
+        dc.appendChild(d);
+      }, 350+i*110);
     });
-  </script>
+  }
 
-  <script src="chatbot.js"></script>
+  /* step sequence */
+  const DUR=[950,1000,900,1500]; let elapsed=0; // Added time for final step
+  DUR.forEach((dur,i)=>{
+    const delay=elapsed; elapsed+=dur;
+    setTimeout(()=>{
+      const stepEl = document.getElementById('step'+i);
+      const prevStepEl = document.getElementById('step'+(i-1));
+      const prevFillEl = document.getElementById('fill'+(i-1));
+      const fillEl = document.getElementById('fill'+i);
+
+      if(i>0 && prevStepEl){
+        prevStepEl.className='a-step done';
+        if (prevFillEl) prevFillEl.style.width='100%';
+      }
+      if (stepEl) stepEl.className='a-step active';
+      setTimeout(()=>{ 
+        if(fillEl) fillEl.style.width='80%'; 
+      },80);
+    },delay);
+  });
+
+  /* API resolve */
+  apiPromise.then(data=>{
+    clearInterval(tickTimer);
+    const ticker = document.getElementById('dataTicker');
+    const step3 = document.getElementById('step3');
+    const fill3 = document.getElementById('fill3');
+    if (ticker) ticker.textContent='Reading complete ✦';
+    if (step3) step3.className='a-step done';
+    if (fill3) fill3.style.width='100%';
+    setTimeout(()=>buildResult(data,imageURL), 650);
+  }).catch(err=>{
+    clearInterval(tickTimer);
+    showView('error');
+    document.getElementById('errorMsg').textContent=err.message||'Analysis failed. Please try again.';
+    if (stream) {
+      stream.getTracks().forEach(track => track.stop());
+    }
+  });
+}
+
+
+/* ─── Build result ─────────────────────── */
+function buildResult(data,imageURL){
+  /* header */
+  document.getElementById('previewImg').src=imageURL;
+  const conf=data.confidence??85;
+  document.getElementById('previewLabel').textContent=`${data.face_shape||'Oval'} Face • ${conf}% Confidence`;
+  setTimeout(()=>{
+    document.getElementById('confidenceFill').style.width=conf+'%';
+    document.getElementById('confidencePct').textContent=conf+'%';
+  },200);
+
+  /* planet */
+  document.getElementById('planetIcon').textContent=SHAPE_PLANETS[data.face_shape]||'🪐';
+  document.getElementById('planetSummary').textContent=data.planet_summary||'Your face carries a powerful cosmic signature.';
+
+  /* pills */
+  const pills=[
+    {i:'🔮',k:'Face Shape',v:data.face_shape},{i:'🧠',k:'Forehead',v:data.forehead},
+    {i:'👁️',k:'Eyes',v:data.eye_distance},{i:'👃',k:'Nose',v:data.nose},
+    {i:'💋',k:'Lips',v:data.lips},{i:'💪',k:'Jawline',v:data.jawline},
+    {i:'〰️',k:'Eyebrows',v:data.eyebrows},
+    {i:'⚖️',k:'Symmetry',v:data.symmetry+(data.symmetry_score?` (${data.symmetry_score}%)`:'')},
+  ];
+  document.getElementById('statsPills').innerHTML=pills.filter(p=>p.v)
+    .map((p,idx)=>`<div class="stat-pill" style="animation-delay:${idx*0.06}s"><span>${p.i}</span>${p.k}: <strong>${p.v}</strong></div>`)
+    .join('');
+
+  /* predictions */
+  document.getElementById('personalityText').textContent=data.personality_analysis||'—';
+  document.getElementById('careerText').textContent=data.career_prediction||'—';
+  document.getElementById('relationshipText').textContent=data.relationship_traits||'—';
+
+  /* features grid */
+  const rd=data.detailed_readings||{};
+  document.getElementById('featuresGrid').innerHTML=Object.entries(rd).map(([k,v],i)=>{
+    const m=FEATURE_META[k]||{emoji:'✦',label:k};
+    return `<div class="feature-card" style="animation-delay:${i*0.07}s">
+      <div class="feature-card-top"><span class="feature-emoji">${m.emoji}</span><span class="feature-label">${m.label}</span></div>
+      <div class="feature-value">${v.type||'—'}</div>
+      <div class="feature-meaning">${v.meaning||v.trait||''}</div>
+      ${v.planet?`<span class="feature-planet-badge">${v.planet}</span>`:''}
+    </div>`;
+  }).join('')||'<p style="color:rgba(255,255,255,0.4);font-size:13px;">Detailed readings unavailable.</p>';
+
+  document.getElementById('modalSubtitle').textContent=
+    `${data.face_shape||''} Face • ${data.forehead||''} Forehead • ${data.symmetry||''} Symmetry`;
+
+  showView('result');
+  document.getElementById('readingModal').scrollTop=0;
+}
+
+/* ─── Tabs ─────────────────────────────── */
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
+  });
+});
+
+
+/* ─── Upload handler ───────────────────── */
+const imageInput=document.getElementById('imageInput');
+if(imageInput){
+  imageInput.addEventListener('change',async function(){
+    const file=this.files[0]; if(!file)return;
+
+    const imageURL=URL.createObjectURL(file);
+    
+    // Hide video if upload is used
+    document.getElementById('scanVideo').style.display = 'none';
+    document.getElementById('countdownOverlay').style.display = 'none';
+    document.getElementById('scanFaceImg').style.display = 'block';
+
+    openModal();
+
+    const apiPromise=(async()=>{
+      const fd=new FormData(); fd.append('file',file);
+      const res=await fetch(`${window.API_BASE_URL}/api/face-read`,{method:'POST',body:fd});
+      const d=await res.json();
+      if(!res.ok) throw new Error(d.detail||'Face reading failed.');
+      return d;
+    })();
+
+    runAnim(imageURL,apiPromise);
+  });
+}
+
+/* ─── Close triggers ───────────────────── */
+document.getElementById('modalClose').addEventListener('click', () => {
+  if (stream) {
+    stream.getTracks().forEach(track => track.stop());
+  }
+  closeModal();
+});
+document.getElementById('readingOverlay').addEventListener('click',function(e){if(e.target===this)closeModal();});
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){closeModal();} });
+document.getElementById('btnSaveReport').addEventListener('click',()=>window.print());
+
+/* ─── Drag & drop ──────────────────────── */
+const uploadBox=document.getElementById('uploadBox');
+if(uploadBox){
+  uploadBox.addEventListener('dragover',e=>{e.preventDefault();uploadBox.style.borderColor='rgba(255,204,51,0.6)';});
+  uploadBox.addEventListener('dragleave',()=>uploadBox.style.borderColor='');
+  uploadBox.addEventListener('drop',e=>{
+    e.preventDefault(); uploadBox.style.borderColor='';
+    const file=e.dataTransfer.files[0];
+    if(file&&file.type.startsWith('image/')){
+      const dt=new DataTransfer(); dt.items.add(file);
+      imageInput.files=dt.files;
+      imageInput.dispatchEvent(new Event('change'));
+    }
+  });
+}
+
+/* ─── Scroll reveal & nav ──────────────── */
+const obs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('show');}));
+document.querySelectorAll('.fade-up,.fade-left,.fade-right').forEach(el=>obs.observe(el));
+const navToggle=document.getElementById('navToggle'),navMenu=document.getElementById('navMenu');
+if(navToggle&&navMenu)navToggle.addEventListener('click',()=>navMenu.classList.toggle('active'));
+window.addEventListener('scroll',()=>{
+  const nb=document.getElementById('numeraiNavbar');
+  if(nb)nb.classList.toggle('scrolled',window.scrollY>50);
+});
+</script>
+
+<script src="chatbot.js"></script>
 </body>
-
 </html>

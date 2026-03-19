@@ -20,3 +20,13 @@ pytest-cache-files-*/
 # OS
 .DS_Store
 Thumbs.db
+
+# Virtual environments
+venv/
+env/
+.venv/
+**/venv/
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd

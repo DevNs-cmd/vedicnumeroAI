@@ -16,11 +16,12 @@ if str(root_dir) not in sys.path:
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from database import users_collection
-from routes.auth import router as auth_router
-from routes.numerology import router as numerology_router
-from routes.face import router as face_router
-from routes.chat import router as chat_router
+from api.database import users_collection
+from api.routes.auth import router as auth_router
+from api.routes.numerology import router as numerology_router
+from api.routes.face import router as face_router
+from api.routes.chat import router as chat_router
+
 
 app = FastAPI()
 

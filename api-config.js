@@ -4,7 +4,7 @@
 // before pushing to production (Vercel, Railway, Render, etc.)
 // ============================================================
 
-const API_BASE_URL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+const API_BASE_URL = (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || !window.location.hostname)
   ? "http://127.0.0.1:8000"
   : window.location.origin;
 
