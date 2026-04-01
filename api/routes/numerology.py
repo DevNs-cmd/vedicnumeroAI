@@ -17,18 +17,19 @@ def numerology(payload: NumerologyRequest, user=Depends(get_current_user)):
         raise HTTPException(status_code=400, detail=str(exc))
 
     doc = {
-        "user_id": user["_id"],
-        "dob": payload.dob,
-        "moolank": moolank,
-        "bhagyank": bhagyank,
+        "user_id":    str(user.get("_id", "")),
+        "email":      user.get("email", ""),
+        "dob":        payload.dob,
+        "moolank":    moolank,
+        "bhagyank":   bhagyank,
         "prediction": prediction,
-        "created_at": datetime.utcnow(),
+        "created_at": datetime.utcnow().isoformat(),
     }
-    numerology_collection.insert_one(doc)
+    numerology_collection.insert_one(doc)   # saved to db.json
 
     return {
-        "success": True,
-        "moolank": moolank,
-        "bhagyank": bhagyank,
+        "success":    True,
+        "moolank":    moolank,
+        "bhagyank":   bhagyank,
         "prediction": prediction,
     }

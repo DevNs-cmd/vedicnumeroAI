@@ -18,8 +18,11 @@ MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB
 #     credentials: HTTPAuthorizationCredentials = Depends(security),
 # ):
 
+from fastapi import Request
+
 @router.post("/face-read")
 async def face_read(
+    request: Request,
     file: UploadFile = File(...)
 ):
 
@@ -61,12 +64,58 @@ async def face_read(
             detail=f"Face analysis failed: {str(e)}"
         )
 
-    return {
+    # Save to JSON database
+    from database import face_collection
+    from datetime import datetime
+    
+    # Try to extract user ID if they are logged in
+    user_id = None
+    auth_header = request.headers.get("Authorization")
+    if auth_header and auth_header.startswith("Bearer "):
+        token = auth_header.split(" ")[1]
+        try:
+            from auth.security import decode_access_token
+            payload = decode_access_token(token)
+            user_id = payload.get("sub")
+        except Exception:
+            pass
+            
+    doc = {
+        "user_id": user_id,
+        "created_at": datetime.utcnow().isoformat(),
+        # Save all the extracted fields
         "face_shape": result.get("face_shape"),
-        "confidence": result.get("confidence"),
+
+        "forehead": result.get("forehead"),
+        "eye_distance": result.get("eye_distance"),
+        "eyebrows": result.get("eyebrows"),
+        "nose": result.get("nose"),
+        "lips": result.get("lips"),
+        "jawline": result.get("jawline"),
+        "symmetry": result.get("symmetry"),
+        "symmetry_score": result.get("symmetry_score"),
+        "confidence": result.get("confidence")
+    }
+    face_collection.insert_one(doc)
+
+
+    return {
+        # Core classifications
+        "face_shape":     result.get("face_shape"),
+        "forehead":       result.get("forehead"),
+        "eye_distance":   result.get("eye_distance"),
+        "eyebrows":       result.get("eyebrows"),
+        "nose":           result.get("nose"),
+        "lips":           result.get("lips"),
+        "jawline":        result.get("jawline"),
+        "symmetry":       result.get("symmetry"),
+        "symmetry_score": result.get("symmetry_score"),
+        "confidence":     result.get("confidence"),
+        # Predictions
         "personality_analysis": result.get("personality_analysis"),
-        "career_prediction": result.get("career_prediction"),
-        "relationship_traits": result.get("relationship_traits"),
-        "planet_summary": result.get("planet_summary"),
-        "detailed_readings": result.get("detailed_readings"),
+        "career_prediction":    result.get("career_prediction"),
+        "relationship_traits":  result.get("relationship_traits"),
+        "planet_summary":       result.get("planet_summary"),
+        # Detailed readings per feature
+        "detailed_readings":    result.get("detailed_readings"),
     }

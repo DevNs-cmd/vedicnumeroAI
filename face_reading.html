@@ -580,7 +580,16 @@ function captureFrame() {
     const apiPromise = (async () => {
       const fd = new FormData();
       fd.append('file', file);
-      const res = await fetch(`${window.API_BASE_URL}/api/face-read`, { method: 'POST', body: fd });
+      
+      const headers = {};
+      const token = localStorage.getItem('vedic_token');
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+
+      const res = await fetch(`${window.API_BASE_URL}/api/face-read`, { 
+        method: 'POST', 
+        headers: headers,
+        body: fd 
+      });
       const d = await res.json();
       if (!res.ok) throw new Error(d.detail || 'Face reading failed.');
       return d;
@@ -751,7 +760,15 @@ if(imageInput){
 
     const apiPromise=(async()=>{
       const fd=new FormData(); fd.append('file',file);
-      const res=await fetch(`${window.API_BASE_URL}/api/face-read`,{method:'POST',body:fd});
+      const headers = {};
+      const token = localStorage.getItem('vedic_token');
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+
+      const res=await fetch(`${window.API_BASE_URL}/api/face-read`,{
+        method:'POST',
+        headers: headers,
+        body:fd
+      });
       const d=await res.json();
       if(!res.ok) throw new Error(d.detail||'Face reading failed.');
       return d;

@@ -1,0 +1,3 @@
+# This directory holds the local JSON database: db.json
+# db.json is gitignored (contains user data).
+# This file exists only to ensure the directory is tracked by git.

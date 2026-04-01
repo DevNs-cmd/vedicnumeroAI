@@ -1,10 +1,9 @@
 fastapi
-pymongo
-python-jose
-passlib[bcrypt]
+uvicorn
+python-jose[cryptography]
+passlib[pbkdf2]
 python-multipart
 opencv-python-headless
 pillow
 numpy
 email-validator
-mongomock

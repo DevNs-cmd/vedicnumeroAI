@@ -5,37 +5,70 @@
   <meta charset="UTF-8">
   <title>Login | NumerAI – Enter Your Cosmic Portal</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description"
-    content="Login to NumerAI and access your personalized Vedic numerology readings and face analysis.">
-
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@400;500&display=swap"
-    rel="stylesheet">
+  <meta name="description" content="Login to NumerAI and access your personalized Vedic numerology readings and face analysis.">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@400;500&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="login.css">
   <script src="api-config.js"></script>
+  <style>
+    /* ── Toast notification ── */
+    #toast {
+      position: fixed; top: 20px; right: 20px; z-index: 9999;
+      padding: 14px 22px; border-radius: 12px; font-family: 'Inter', sans-serif;
+      font-size: 14px; font-weight: 500; max-width: 340px;
+      opacity: 0; transform: translateY(-10px);
+      transition: all 0.35s cubic-bezier(0.34,1.56,0.64,1);
+      pointer-events: none;
+    }
+    #toast.show { opacity: 1; transform: translateY(0); pointer-events: all; }
+    #toast.error { background: linear-gradient(135deg,#2a0a0a,#3d1212); border: 1px solid rgba(255,80,80,0.4); color: #ff8080; }
+    #toast.success { background: linear-gradient(135deg,#0a2218,#122d1e); border: 1px solid rgba(80,220,130,0.4); color: #5ddc8a; }
+
+    /* ── Input validation states ── */
+    input.input-error { border-color: rgba(255,80,80,0.6) !important; }
+    input.input-ok { border-color: rgba(80,220,130,0.5) !important; }
+
+    /* ── Loading spinner on button ── */
+    .btn.loading { opacity: 0.7; pointer-events: none; }
+    .btn.loading::after {
+      content: ''; display: inline-block; width: 14px; height: 14px; margin-left: 10px;
+      border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff;
+      border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Field error hint ── */
+    .field-hint { font-size: 11px; color: #ff8080; margin: -8px 0 10px 4px; display: none; }
+    .field-hint.show { display: block; }
+  </style>
 </head>
 
 <body>
 
+  <div id="toast"></div>
   <a href="index.html" class="back">← Back to Home</a>
 
   <div class="card">
 
     <div class="icon">☀</div>
     <h2>Welcome Back</h2>
-    <div class="subtitle">Enter your credentials to continue</div>
+    <div class="subtitle">Enter your credentials to continue your cosmic journey</div>
 
-    <input type="email" id="loginEmail" placeholder="Email Address">
+    <label style="width:100%;font-family:'Inter',sans-serif;font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:4px;">Email Address</label>
+    <input type="email" id="loginEmail" placeholder="you@example.com" autocomplete="email">
+    <div class="field-hint" id="hintEmail">Please enter a valid email address.</div>
 
+    <label style="width:100%;font-family:'Inter',sans-serif;font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:4px;">Password</label>
     <div class="input-group">
-      <input type="password" id="password" placeholder="Password">
-      <span class="eye" onclick="toggle()">👁</span>
+      <input type="password" id="password" placeholder="Your password" autocomplete="current-password">
+      <span class="eye" onclick="togglePwd('password')" title="Show/Hide">👁</span>
     </div>
+    <div class="field-hint" id="hintPwd">Password cannot be empty.</div>
 
     <div class="links">
       <a href="#">Forgot password?</a>
     </div>
 
-    <button class="btn" id="loginBtn">Enter the Portal</button>
+    <button class="btn" id="loginBtn" onclick="handleLogin()">Enter the Portal</button>
 
     <div class="footer">
       New to the cosmic realm?
@@ -45,42 +78,104 @@
   </div>
 
   <script>
-    function toggle() {
-      const p = document.getElementById("password");
-      p.type = p.type === "password" ? "text" : "password";
+    // ── Helpers ──────────────────────────────────────────────────────
+    function togglePwd(id) {
+      const p = document.getElementById(id);
+      p.type = p.type === 'password' ? 'text' : 'password';
     }
 
-    const loginBtn = document.getElementById("loginBtn");
-    loginBtn.addEventListener("click", async () => {
-      const email = document.getElementById("loginEmail").value.trim();
-      const password = document.getElementById("password").value;
+    let _toastTimer;
+    function showToast(msg, type = 'error') {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.className = 'show ' + type;
+      clearTimeout(_toastTimer);
+      _toastTimer = setTimeout(() => { t.classList.remove('show'); }, 4500);
+    }
 
-      if (!email || !password) {
-        alert("Please enter email and password");
-        return;
+    function setFieldState(id, hintId, ok, msg = '') {
+      const el = document.getElementById(id);
+      el.classList.toggle('input-error', !ok);
+      el.classList.toggle('input-ok', ok);
+      const hint = document.getElementById(hintId);
+      hint.textContent = msg;
+      hint.classList.toggle('show', !ok && !!msg);
+    }
+
+    function clearStates() {
+      ['loginEmail', 'password'].forEach(id => {
+        const el = document.getElementById(id);
+        el.classList.remove('input-error', 'input-ok');
+      });
+      ['hintEmail', 'hintPwd'].forEach(id => {
+        document.getElementById(id).classList.remove('show');
+      });
+    }
+
+    // ── Login handler ─────────────────────────────────────────────────
+    async function handleLogin() {
+      clearStates();
+      const email    = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('password').value;
+      const btn      = document.getElementById('loginBtn');
+      let valid = true;
+
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        setFieldState('loginEmail', 'hintEmail', false, 'Please enter a valid email address.');
+        valid = false;
+      } else {
+        setFieldState('loginEmail', 'hintEmail', true);
       }
 
+      if (!password) {
+        setFieldState('password', 'hintPwd', false, 'Password cannot be empty.');
+        valid = false;
+      } else {
+        setFieldState('password', 'hintPwd', true);
+      }
+
+      if (!valid) return;
+
+      btn.classList.add('loading');
+      btn.textContent = 'Checking credentials…';
+
       try {
-        const res = await fetch(`${window.API_BASE_URL}/auth/login`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password })
+        const res  = await fetch(`${window.API_BASE_URL}/auth/login`, {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({ email, password })
         });
 
         const data = await res.json();
+
         if (!res.ok || !data.success) {
-          alert(data.detail || "Login failed");
+          showToast(data.detail || 'Login failed. Please check your credentials.', 'error');
+          setFieldState('password', 'hintPwd', false, 'Incorrect password or unregistered email.');
+          btn.classList.remove('loading');
+          btn.textContent = 'Enter the Portal';
           return;
         }
 
-        localStorage.setItem("vedic_token", data.token);
-        window.location.href = "index.html";
+        // ── Save session ────────────────────────────────────────────
+        localStorage.setItem('vedic_token',     data.token);
+        localStorage.setItem('vedic_email',     data.email     || email);
+        localStorage.setItem('vedic_full_name', data.full_name || '');
+
+        showToast(`Welcome back${data.full_name ? ', ' + data.full_name : ''}! 🌟`, 'success');
+        setTimeout(() => { window.location.href = 'index.html'; }, 1200);
+
       } catch (err) {
-        alert("Server not reachable. Please make sure the backend is running.");
+        btn.classList.remove('loading');
+        btn.textContent = 'Enter the Portal';
+        showToast('Cannot reach the server. Is the backend running?', 'error');
       }
+    }
+
+    // Allow Enter key to submit
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Enter') handleLogin();
     });
   </script>
 
 </body>
-
 </html>

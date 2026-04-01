@@ -30,3 +30,9 @@ env/
 *.pyc
 *.pyo
 *.pyd
+
+# JSON database — contains user data, do NOT commit to git
+api/data/db.json
+
+# Old Mongita storage
+api/%storage%/

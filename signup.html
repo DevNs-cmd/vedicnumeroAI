@@ -6,15 +6,50 @@
   <title>Sign Up | NumerAI – Create Your Cosmic Account</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Create your NumerAI account and begin your Vedic numerology cosmic journey today.">
-
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@400;500&display=swap"
-    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@400;500&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="signup.css">
   <script src="api-config.js"></script>
+  <style>
+    /* ── Toast ── */
+    #toast {
+      position: fixed; top: 20px; right: 20px; z-index: 9999;
+      padding: 14px 22px; border-radius: 12px; font-family: 'Inter', sans-serif;
+      font-size: 14px; font-weight: 500; max-width: 340px;
+      opacity: 0; transform: translateY(-10px);
+      transition: all 0.35s cubic-bezier(0.34,1.56,0.64,1);
+      pointer-events: none;
+    }
+    #toast.show { opacity: 1; transform: translateY(0); pointer-events: all; }
+    #toast.error   { background: linear-gradient(135deg,#2a0a0a,#3d1212); border: 1px solid rgba(255,80,80,0.4); color: #ff8080; }
+    #toast.success { background: linear-gradient(135deg,#0a2218,#122d1e); border: 1px solid rgba(80,220,130,0.4); color: #5ddc8a; }
+
+    /* ── Input states ── */
+    input.input-error { border-color: rgba(255,80,80,0.6) !important; }
+    input.input-ok    { border-color: rgba(80,220,130,0.5) !important; }
+
+    .field-hint { font-size: 11px; color: #ff8080; margin: -8px 0 10px 4px; display: none; font-family: 'Inter', sans-serif; }
+    .field-hint.show { display: block; }
+
+    /* ── Button loading ── */
+    .btn.loading { opacity: 0.7; pointer-events: none; }
+    .btn.loading::after {
+      content: ''; display: inline-block; width: 14px; height: 14px; margin-left: 10px;
+      border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff;
+      border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Password strength bar ── */
+    .pwd-strength-wrap { width:100%; margin: -6px 0 10px; }
+    .pwd-strength-bar { height: 3px; border-radius: 3px; background: rgba(255,255,255,0.07); overflow: hidden; margin-bottom: 3px; }
+    .pwd-strength-fill { height: 100%; width: 0%; border-radius: 3px; transition: width 0.4s, background 0.4s; }
+    .pwd-strength-label { font-size: 10px; font-family: 'Cinzel',serif; letter-spacing: 1px; color: rgba(255,255,255,0.4); }
+  </style>
 </head>
 
 <body>
 
+  <div id="toast"></div>
   <a href="index.html" class="back">← Back to Home</a>
 
   <div class="card">
@@ -24,40 +59,62 @@
     <div class="subtitle">Begin your cosmic journey</div>
 
     <div class="progress">
-      <div class="dot active"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
+      <div class="dot active" id="dot0"></div>
+      <div class="dot"        id="dot1"></div>
+      <div class="dot"        id="dot2"></div>
     </div>
 
-    <!-- STEP 1 -->
-    <div class="step active">
-      <input type="text" id="signupName" placeholder="Full Name">
-      <input type="email" id="signupEmail" placeholder="Email Address">
-      <button class="btn" onclick="nextStep()">Next</button>
+    <!-- ── STEP 1: Identity ──────────────────────────────────────── -->
+    <div class="step active" id="step0">
+      <label class="field-label">Full Name <span style="color:rgba(255,204,51,0.6)">*</span></label>
+      <input type="text"  id="signupName"  placeholder="Your full name" autocomplete="name">
+      <div class="field-hint" id="hintName">Please enter your name.</div>
+
+      <label class="field-label">Email Address <span style="color:rgba(255,204,51,0.6)">*</span></label>
+      <input type="email" id="signupEmail" placeholder="you@example.com" autocomplete="email">
+      <div class="field-hint" id="hintSignupEmail">Enter a valid email address.</div>
+
+      <button class="btn" onclick="goStep1()">Next →</button>
     </div>
 
-    <!-- STEP 2 -->
-    <div class="step">
+    <!-- ── STEP 2: Password ──────────────────────────────────────── -->
+    <div class="step" id="step1">
+      <label class="field-label">Create Password <span style="color:rgba(255,204,51,0.6)">*</span></label>
       <div class="input-group">
-        <input type="password" id="pass1" placeholder="Create Password">
-        <span class="eye" onclick="toggle('pass1')">👁</span>
+        <input type="password" id="pass1" placeholder="Min. 6 characters" autocomplete="new-password" oninput="checkStrength()">
+        <span class="eye" onclick="togglePwd('pass1')">👁</span>
       </div>
+      <div class="pwd-strength-wrap">
+        <div class="pwd-strength-bar"><div class="pwd-strength-fill" id="strengthFill"></div></div>
+        <div class="pwd-strength-label" id="strengthLabel"></div>
+      </div>
+      <div class="field-hint" id="hintPass1">Password must be at least 6 characters.</div>
 
+      <label class="field-label">Confirm Password <span style="color:rgba(255,204,51,0.6)">*</span></label>
       <div class="input-group">
-        <input type="password" id="pass2" placeholder="Confirm Password">
-        <span class="eye" onclick="toggle('pass2')">👁</span>
+        <input type="password" id="pass2" placeholder="Repeat your password" autocomplete="new-password">
+        <span class="eye" onclick="togglePwd('pass2')">👁</span>
       </div>
+      <div class="field-hint" id="hintPass2">Passwords do not match.</div>
 
-      <button class="btn secondary" onclick="prevStep()">Back</button>
-      <button class="btn" onclick="nextStep()">Next</button>
+      <div style="display:flex;gap:10px;">
+        <button class="btn secondary" onclick="changeStep(0)">← Back</button>
+        <button class="btn" onclick="goStep2()">Next →</button>
+      </div>
     </div>
 
-    <!-- STEP 3 -->
-    <div class="step">
+    <!-- ── STEP 3: Birth Details ─────────────────────────────────── -->
+    <div class="step" id="step2">
+      <label class="field-label">Date of Birth</label>
       <input type="date" id="signupDob">
-      <input type="text" id="signupBirthPlace" placeholder="Birth Place">
-      <button class="btn secondary" onclick="prevStep()">Back</button>
-      <a href="#" id="signupLink"><button class="btn" id="signupBtn" type="button">Enter the Portal</button></a>
+
+      <label class="field-label">Birth Place</label>
+      <input type="text"  id="signupBirthPlace" placeholder="City, Country">
+
+      <div style="display:flex;gap:10px;">
+        <button class="btn secondary" onclick="changeStep(1)">← Back</button>
+        <button class="btn" id="signupBtn" onclick="handleSignup()">✨ Enter the Portal</button>
+      </div>
     </div>
 
     <div class="footer">
@@ -67,69 +124,177 @@
   </div>
 
   <script>
+    // ── Step management ───────────────────────────────────────────────
     let current = 0;
-    const steps = document.querySelectorAll('.step');
-    const dots = document.querySelectorAll('.dot');
 
-    function update() {
-      steps.forEach((s, i) => s.classList.toggle('active', i === current));
-      dots.forEach((d, i) => d.classList.toggle('active', i <= current));
+    function changeStep(n) {
+      document.getElementById('step' + current).classList.remove('active');
+      ['dot0','dot1','dot2'].forEach((id, i) =>
+        document.getElementById(id).classList.toggle('active', i <= n)
+      );
+      current = n;
+      document.getElementById('step' + current).classList.add('active');
     }
 
-    function nextStep() {
-      if (current < steps.length - 1) { current++; update(); }
+    // ── Helpers ───────────────────────────────────────────────────────
+    function togglePwd(id) {
+      const el = document.getElementById(id);
+      el.type = el.type === 'password' ? 'text' : 'password';
     }
 
-    function prevStep() {
-      if (current > 0) { current--; update(); }
+    let _toastTimer;
+    function showToast(msg, type = 'error') {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.className = 'show ' + type;
+      clearTimeout(_toastTimer);
+      _toastTimer = setTimeout(() => { t.classList.remove('show'); }, 4500);
     }
 
-    function toggle(id) {
-      const input = document.getElementById(id);
-      input.type = input.type === "password" ? "text" : "password";
+    function setField(id, hintId, ok, msg = '') {
+      const el = document.getElementById(id);
+      el.classList.toggle('input-error', !ok);
+      el.classList.toggle('input-ok',    ok);
+      const h = document.getElementById(hintId);
+      h.textContent = msg;
+      h.classList.toggle('show', !ok && !!msg);
     }
 
-    const signupLink = document.getElementById("signupLink");
-    signupLink.addEventListener("click", async (e) => {
-      e.preventDefault();
-      const full_name = document.getElementById("signupName").value.trim();
-      const email = document.getElementById("signupEmail").value.trim();
-      const password = document.getElementById("pass1").value;
-      const confirm = document.getElementById("pass2").value;
-      const dob = document.getElementById("signupDob").value;
-      const birth_place = document.getElementById("signupBirthPlace").value.trim();
+    function clearField(id, hintId) {
+      const el = document.getElementById(id);
+      el.classList.remove('input-error', 'input-ok');
+      document.getElementById(hintId).classList.remove('show');
+    }
 
-      if (!email || !password) {
-        alert("Please complete signup details");
-        return;
+    // ── Password strength ─────────────────────────────────────────────
+    function checkStrength() {
+      const val = document.getElementById('pass1').value;
+      const fill  = document.getElementById('strengthFill');
+      const label = document.getElementById('strengthLabel');
+      let score = 0;
+      if (val.length >= 6)  score++;
+      if (val.length >= 10) score++;
+      if (/[A-Z]/.test(val) && /[a-z]/.test(val)) score++;
+      if (/\d/.test(val))   score++;
+      if (/[^A-Za-z0-9]/.test(val)) score++;
+      const levels = [
+        { pct:'0%',   color:'transparent', text:'' },
+        { pct:'25%',  color:'#ff4444',     text:'WEAK' },
+        { pct:'50%',  color:'#ff9f43',     text:'FAIR' },
+        { pct:'75%',  color:'#ffcc33',     text:'GOOD' },
+        { pct:'85%',  color:'#5ddc8a',     text:'STRONG' },
+        { pct:'100%', color:'#00e4b0',     text:'VERY STRONG' },
+      ];
+      const lv = levels[Math.min(score, 5)];
+      fill.style.width = lv.pct;
+      fill.style.background = lv.color;
+      label.textContent = lv.text;
+      label.style.color = lv.color;
+    }
+
+    // ── Step validators ───────────────────────────────────────────────
+    function goStep1() {
+      clearField('signupName',  'hintName');
+      clearField('signupEmail', 'hintSignupEmail');
+
+      const name  = document.getElementById('signupName').value.trim();
+      const email = document.getElementById('signupEmail').value.trim();
+      let valid = true;
+
+      if (!name) {
+        setField('signupName', 'hintName', false, 'Please enter your name.'); valid = false;
+      } else {
+        setField('signupName', 'hintName', true);
+      }
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        setField('signupEmail', 'hintSignupEmail', false, 'Enter a valid email address.'); valid = false;
+      } else {
+        setField('signupEmail', 'hintSignupEmail', true);
       }
 
-      if (password !== confirm) {
-        alert("Passwords do not match");
-        return;
+      if (valid) changeStep(1);
+    }
+
+    function goStep2() {
+      clearField('pass1', 'hintPass1');
+      clearField('pass2', 'hintPass2');
+
+      const p1 = document.getElementById('pass1').value;
+      const p2 = document.getElementById('pass2').value;
+      let valid = true;
+
+      if (p1.length < 6) {
+        setField('pass1', 'hintPass1', false, 'Password must be at least 6 characters.'); valid = false;
+      } else {
+        setField('pass1', 'hintPass1', true);
       }
+      if (p2 !== p1) {
+        setField('pass2', 'hintPass2', false, 'Passwords do not match.'); valid = false;
+      } else if (p2) {
+        setField('pass2', 'hintPass2', true);
+      }
+
+      if (valid) changeStep(2);
+    }
+
+    // ── Final signup submission ────────────────────────────────────────
+    async function handleSignup() {
+      const full_name   = document.getElementById('signupName').value.trim();
+      const email       = document.getElementById('signupEmail').value.trim();
+      const password    = document.getElementById('pass1').value;
+      const dob         = document.getElementById('signupDob').value;
+      const birth_place = document.getElementById('signupBirthPlace').value.trim();
+
+      const btn = document.getElementById('signupBtn');
+      btn.classList.add('loading');
+      btn.textContent = 'Creating your account…';
 
       try {
         const res = await fetch(`${window.API_BASE_URL}/auth/signup`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ full_name, email, password, dob, birth_place })
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({ full_name, email, password, dob, birth_place })
         });
 
         const data = await res.json();
+
         if (!res.ok || !data.success) {
-          alert(data.detail || "Signup failed");
+          showToast(data.detail || 'Signup failed. Please try again.', 'error');
+          btn.classList.remove('loading');
+          btn.textContent = '✨ Enter the Portal';
           return;
         }
 
-        localStorage.setItem("vedic_token", data.token);
-        window.location.href = "index.html";
+        // ── Persist session ─────────────────────────────────────────
+        localStorage.setItem('vedic_token',     data.token);
+        localStorage.setItem('vedic_email',     data.email     || email);
+        localStorage.setItem('vedic_full_name', data.full_name || full_name);
+
+        showToast(`Welcome, ${data.full_name || full_name}! Your account is ready 🌟`, 'success');
+        setTimeout(() => { window.location.href = 'index.html'; }, 1400);
+
       } catch (err) {
-        alert("Server not reachable. Please make sure the backend is running.");
+        btn.classList.remove('loading');
+        btn.textContent = '✨ Enter the Portal';
+        showToast('Cannot reach the server. Is the backend running?', 'error');
       }
-    });
+    }
+
+    // Dynamic field labels
+    document.querySelectorAll('.field-label').length === 0 &&
+      document.querySelectorAll('label').forEach(l => l.classList.add('field-label'));
   </script>
 
+  <style>
+    .field-label {
+      width: 100%;
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 4px;
+      display: block;
+    }
+  </style>
 </body>
 
 </html>
