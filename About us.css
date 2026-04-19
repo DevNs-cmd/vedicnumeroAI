@@ -155,12 +155,12 @@
       .about-title {
         font-family: 'Playfair Display', serif;
         font-size: 3rem;
-        color: #d7b9ff;
+        color: whitesmoke;
         margin-bottom: 15px;
       }
       
       .about-title span {
-        color: #b26cff;
+        color:#ffbf3f;;
       }
       
       /* Subtitle */
