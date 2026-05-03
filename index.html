@@ -22,129 +22,6 @@
   <script src="api-config.js"></script>
 
   <style>
-    
-/* --- RESPONSIVE NAVBAR --- */
-.numerai-navbar {
-  width: 100%;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 1000;
-  background: linear-gradient(180deg, #0e0a1f, #080514);
-  border-bottom: 1px solid rgba(255, 191, 63, 0.1);
-  backdrop-filter: blur(10px);
-}
-
-.nav-container {
-  max-width: 1200px;
-  margin: auto;
-  padding: 12px 25px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.nav-logo {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #ffbf3f;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-decoration: none;
-  font-size: 1.2rem;
-  font-family: serif;
-}
-
-.nav-links {
-  display: flex;
-  gap: 25px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  align-items: center;
-}
-
-.nav-item {
-  text-decoration: none;
-  color: #FFFAEB;
-  font-size: 14px;
-  transition: 0.3s;
-  font-weight: 500;
-  
-}
-
-.nav-item:hover { color:#ffcc33; }
-
-.nav-toggle {
-  display: none;
-  font-size: 24px;
-  color: var(--gold);
-  cursor: pointer;
-}
-
-
-
-
-.nav-toggle i {
-  color: #ffcc33 !important; /* Force the gold color */
-  transition: transform 0.3s ease; /* Bonus: smooth transition when clicked */
-}
-
-
-.nav-toggle:hover i {
-  color: #ffbf3f; 
-  text-shadow: 0 0 10px rgba(255, 204, 51, 0.5);
-}
-
-.btn-start {
-  background: linear-gradient(135deg, #ffbf3f, #ff9f00);
-  padding: 8px 22px;
-  border-radius: 999px;
-  font-size: 13px;
-  color: #000;
-  text-decoration: none;
-  font-weight: 700;
-  transition: 0.3s ease;
-  display: inline-block;
-}
-
-.btn-start:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(255, 191, 63, 0.3);
-  color: #000;
-}
-
-@media (max-width: 992px) {
-  .nav-toggle { display: block; }
-  .nav-links {
-      position: fixed;
-      top: 0;
-      right: -100%;
-      width: 280px;
-      height: 100vh;
-      background: #0e0a1f;
-      flex-direction: column;
-      justify-content: center;
-      gap: 30px;
-      transition: 0.4s ease-in-out;
-      z-index: 1001;
-      border-left: 1px solid rgba(255, 191, 63, 0.2);
-  }
-  .nav-links.active { right: 0; }
-  .nav-actions { display: none; } /* Hide the desktop button */
-  
-  /* Show a close button inside the mobile menu */
-  .mobile-close {
-      position: absolute;
-      top: 20px;
-      right: 25px;
-      font-size: 28px;
-      color: #ffcc33;
-      cursor: pointer;
-  }
-}
-
     /* --- GSAP ANIMATION STATES --- */
     .hero-text h1,
     .hero-text p,
@@ -245,31 +122,22 @@
 
 <body>
 
- 
-  <header class="numerai-navbar">
+  <header class="numerai-navbar" id="numeraiNavbar">
     <div class="nav-container">
-      <a href="#" class="nav-logo">✨ <span>Vedic Numero AI</span></a>
-
-      <ul class="nav-links" id="navLinks">
-        <span class="mobile-close d-lg-none" onclick="toggleMenu()">&times;</span>
-        <li><a href="index.html" class="nav-item">Home</a></li>
-        <li><a href="moolank.html" class="nav-item">Moolank</a></li>
-        <li><a href="face_reading.html" class="nav-item">Face Reading</a></li>
-        <li><a href="Personal-Reading.html" class="nav-item">Personal Reading</a></li>
-        <li><a href="Pricing.html" class="nav-item">Pricing</a></li>
-        <li class="d-lg-none"><a href="signup.html" class="btn-start">Get Started</a></li>
-      </ul>
-
-      <div class="nav-actions d-none d-lg-block">
+      <div class="nav-logo">✨ <span>NUMERAI</span></div>
+      <nav class="nav-links" id="navMenu">
+        <a href="index.html" class="nav-item">Home</a>
+        <a href="moolank.html" class="nav-item restricted">Moolank <i class="fas fa-lock"></i></a>
+        <a href="face_reading.html" class="nav-item restricted">Face Reading <i class="fas fa-lock"></i></a>
+        <a href="Personal-Reading.html" class="nav-item restricted">Personal Reading <i class="fas fa-lock"></i></a>
+        <a href="Pricing.html" class="nav-item restricted">Pricing <i class="fas fa-lock"></i></a>
+      </nav>
+      <div class="nav-actions">
         <a href="signup.html" class="btn-start">Get Started</a>
-      </div>
-
-      <div class="nav-toggle" onclick="toggleMenu()" aria-label="Open Navigation Menu">
-        <i class="fas fa-bars"></i>
+        <div class="nav-toggle" id="navToggle"><span></span><span></span><span></span></div>
       </div>
     </div>
   </header>
-
 
   <section class="hero-section">
     <div class="container">
@@ -360,49 +228,33 @@
 
   <footer class="numerai-footer-alt">
     <div class="footer-glass">
-
-      <!-- Brand -->
       <div class="footer-brand-box">
-        <h2>✨Vedic Numero AI</h2>
+        <h2>✨ NumerAI</h2>
         <p>Unlocking cosmic intelligence through AI & numerology.</p>
       </div>
-
-      <!-- Links -->
       <div class="footer-links">
         <h4>Explore</h4>
         <a href="index.html">Home</a>
-        <a href="Pricing.html">Plans</a>
+        <a href="#" class="restricted">Plans</a>
         <a href="About us.html">About</a>
         <a href="contact.html">Contact</a>
       </div>
-
-      <!-- Support -->
       <div class="footer-links">
         <h4>Support</h4>
-        <a href="Pricing.html">Privacy Policy</a>
+        <a href="Privacy-Policy.html">Privacy Policy</a>
         <a href="Terms-Conditions.html">Terms & Conditions</a>
-
       </div>
-
-      <!-- Social -->
       <div class="footer-social-alt">
         <h4>Connect</h4>
         <div class="social-icons">
-          <a class="instagram" href="#"><i class="fab fa-instagram"></i></a>
-          <a class="linkedin" href="#"><i class="fab fa-linkedin-in"></i></a>
-          <a class="whatsapp" href="#"><i class="fab fa-whatsapp"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-linkedin-in"></i></a>
+          <a href="#"><i class="fab fa-whatsapp"></i></a>
         </div>
       </div>
-
     </div>
-
-    <div class="footer-bottom">
-      ©2026 Vedic Numero AI. All rights reserved.
-      <br>
-      @Prem Aggarwal
-    </div>
+    <div class="footer-bottom">© 2026 NumerAI • Crafted with ✨ Cosmic Energy</div>
   </footer>
-
 
   <div id="scrollPopup" class="popup-overlay">
     <div class="popup-card">
@@ -418,11 +270,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
   <script>
-    
-    // Navbar Toggle
-    function toggleMenu() {
-      document.getElementById('navLinks').classList.toggle('active');
-    }
     // CHECK LOGIN STATE
     const isLoggedIn = !!localStorage.getItem('vedic_token');
 
